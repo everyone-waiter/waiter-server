@@ -10,9 +10,9 @@ public interface CustomerRepository {
 
 	Optional<Customer> findFirstByOrderByWaitingNumberAsc();
 
-	Optional<Customer> deleteById(String id);
+	Optional<Customer> deleteById(Long id);
 
-	Optional<Customer> findById(String id);
+	Optional<Customer> findById(Long id);
 
 	<S extends Customer> S save(S entity);
 
