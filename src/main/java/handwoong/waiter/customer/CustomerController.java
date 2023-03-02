@@ -10,7 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 @Controller
 @RequestMapping("/customers/waiting")
 public class CustomerController {
-	@GetMapping("/")
+	@GetMapping
 	public String waitingList() {
 		return "customers/index";
 	}
