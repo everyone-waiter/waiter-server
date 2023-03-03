@@ -13,11 +13,11 @@
 <div class="px-4 pt-5 my-5 text-center border-bottom">
     <h1 class="display-4 fw-bold" th:if="${customer.id}">대기열 등록 성공</h1>
     <div class="col-lg-6 mx-auto">
-        <p id="timer"></p>
-        <p class="lead mb-4">카카오톡으로 알림톡이 전송되었어요.</p>
-        <p class="lead mb-4">고객님의 대기 번호는 [[${customer.waitingNumber}]]번 입니다.</p>
-        <p class="lead mb-4">고객님의 대기 순번은 [[${customer.waitingTurn}]]번 입니다.</p>
+        <p class="lead mb-4" th:if="${customer.phoneNumber}">카카오톡으로 알림톡이 전송되었어요.</p>
+        <p class="lead mb-4" th:if="${customer.waitingNumber}">고객님의 대기 번호는 [[${customer.waitingNumber}]]번 입니다.</p>
+        <p class="lead mb-4" th:if="${customer.waitingTurn}">고객님의 대기 순번은 [[${customer.waitingTurn}]]번 입니다.</p>
         <div class="d-grid gap-2 d-sm-flex justify-content-sm-center mb-5">
+            <p id="timer">10초 뒤 홈 화면으로 돌아갑니다.</p>
             <button type="button" class="btn btn-primary btn-lg px-4 me-sm-3"
                     th:onclick="|location.href='@{/customers/waiting}'|">홈으로
                 돌아가기
@@ -26,15 +26,17 @@
     </div>
 </div>
 <script th:inline="javascript">
-    const timer = document.querySelector("#timer");
+    const timerDom = document.querySelector("#timer");
+    const webSocket = new WebSocket("ws://localhost:8080/ws/customers/waiting");
+    webSocket.onopen = () => {
+        webSocket.send("refresh");
+    }
 
     let time = 10;
     setInterval(() => {
         if (time === 0) location.replace("/customers/waiting");
-        if (time > 0) {
-            time--;
-            timer.textContent = `${time}초 뒤 등록 화면으로 이동합니다.`;
-        }
+        time--;
+        timerDom.textContent = `${time}초 뒤 홈 화면으로 돌아갑니다.`;
     }, 1000);
 </script>
 <script th:src="@{/js/bootstrap.min.js}"></script>

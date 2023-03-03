@@ -13,7 +13,7 @@
 <div class="container col-xl-10 col-xxl-8 px-4 py-5">
     <div class="row align-items-center g-lg-5 py-5">
         <div class="col-lg-7 text-center text-lg-start">
-            <h1 class="display-4 fw-bold lh-1 mb-3" th:text="|현재 ${count}팀이 대기 중|">현재 웨이팅 중인 팀 수</h1>
+            <h1 id="waitingCount" class="display-4 fw-bold lh-1 mb-3" th:text="|현재 ${count}팀이 대기 중|">현재 웨이팅 중인 팀 수</h1>
             <p class="col-lg-10 fs-4" th:if="${count}">잔여 좌석이 없습니다. 입장 대기 등록을 해 주세요.</p>
             <p class="col-lg-10 fs-4" th:unless="${count}">현재 대기중인 팀이 없습니다. 직원이 안내를 도와드릴거에요.</p>
         </div>
@@ -43,15 +43,19 @@
     </div>
 </div>
 <script th:inline="javascript">
-    const updateData = () => {
-        fetch("/customers/waiting/reload", {method: 'GET'})
-            .then(res => res.json())
-            .then(res => {
-                if (res !== [[${count}]]) location.replace(location.href);
-            })
-    };
+    const webSocket = new WebSocket("ws://localhost:8080/ws/customers/waiting")
+    const waitingCountDom = document.querySelector("#waitingCount");
+    webSocket.onmessage = onMessage;
 
-    setInterval(updateData, 10000);
+    function onMessage(msg) {
+        if (msg.data === 'refresh') {
+            fetch("/customers/waiting/reload", {method: "GET"})
+                .then(res => res.json())
+                .then(res => {
+                    waitingCountDom.textContent = `현재 ${res}팀이 대기 중`;
+                })
+        }
+    }
 </script>
 <script th:src="@{/js/bootstrap.min.js}"></script>
 </body>

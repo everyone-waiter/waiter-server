@@ -40,6 +40,20 @@ public class CustomerController {
 		return "customers/result";
 	}
 
+	@GetMapping("/turn/{customerId}")
+	public String waitingTurn(@PathVariable String customerId, Model model) {
+		Customer customer = customerService.getWaitingMyTurn(customerId);
+		model.addAttribute("customer", customer);
+		return "/customers/turn";
+	}
+
+	@GetMapping("/cancel/{customerId}")
+	public String waitingCancel(@PathVariable String customerId, Model model) {
+		Customer customer = customerService.getCustomerById(customerId);
+		model.addAttribute("customer", customer);
+		return "customers/cancel";
+	}
+
 	@GetMapping("/admin")
 	public String waitingAdmin(Model model) {
 		List<Customer> waitingList = customerService.getWaitingList();
@@ -48,12 +62,6 @@ public class CustomerController {
 	}
 
 	// ==============================
-
-	@GetMapping("/reload")
-	@ResponseBody
-	public long waitingCountReload() {
-		return customerService.getWaitingCount();
-	}
 
 	@PostMapping
 	public String waitingRegister(Customer customer, RedirectAttributes redirectAttributes) {
@@ -64,12 +72,33 @@ public class CustomerController {
 		return "redirect:/customers/waiting/result";
 	}
 
+	@GetMapping("/reload")
+	@ResponseBody
+	public long waitingCountReload() {
+		return customerService.getWaitingCount();
+	}
+
+	@GetMapping("/admin/reload")
+	@ResponseBody
+	public List<Customer> waitingAdminReload() {
+		return customerService.getWaitingList();
+	}
+
 	@DeleteMapping("/delete/{customerId}")
 	@ResponseBody
 	public Customer waitingDelete(@PathVariable String customerId) {
 		log.info("[DELETE] Waiting Delete RequestId is {}", customerId);
 		Customer deletedCustomer = customerService.deleteWaiting(customerId);
 		log.info("[DELETE] Waiting Delete Customer is {}", deletedCustomer);
+		return deletedCustomer;
+	}
+
+	@DeleteMapping("/cancel/{customerId}")
+	@ResponseBody
+	public Customer waitingCancel(@PathVariable String customerId) {
+		log.info("[DELETE] Waiting Cancel RequestId is {}", customerId);
+		Customer deletedCustomer = customerService.cancelWaiting(customerId);
+		log.info("[DELETE] Waiting Cancel Customer is {}", deletedCustomer);
 		return deletedCustomer;
 	}
 }
