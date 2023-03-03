@@ -11,11 +11,12 @@
 </head>
 <body>
 <div class="px-4 pt-5 my-5 text-center border-bottom">
-    <h1 class="display-4 fw-bold"">등록 결과</h1>
+    <h1 class="display-4 fw-bold" th:if="${customer.id}">대기열 등록 성공</h1>
     <div class="col-lg-6 mx-auto">
+        <p id="timer"></p>
         <p class="lead mb-4">카카오톡으로 알림톡이 전송되었어요.</p>
-        <p class="lead mb-4">고객님의 대기 번호</p>
-        <p class="lead mb-4">고객님의 대기 순번</p>
+        <p class="lead mb-4">고객님의 대기 번호는 [[${customer.waitingNumber}]]번 입니다.</p>
+        <p class="lead mb-4">고객님의 대기 순번은 [[${customer.waitingTurn}]]번 입니다.</p>
         <div class="d-grid gap-2 d-sm-flex justify-content-sm-center mb-5">
             <button type="button" class="btn btn-primary btn-lg px-4 me-sm-3"
                     th:onclick="|location.href='@{/customers/waiting}'|">홈으로
@@ -25,10 +26,15 @@
     </div>
 </div>
 <script th:inline="javascript">
-    let timer = 10;
+    const timer = document.querySelector("#timer");
+
+    let time = 10;
     setInterval(() => {
-        if (timer === 0) location.href = "/customers/waiting"
-        if (timer > 0) timer--;
+        if (time === 0) location.href = "/customers/waiting"
+        if (time > 0) {
+            time--;
+            timer.textContent = `${time}초 뒤 등록 화면으로 이동합니다.`;
+        }
     }, 1000);
 </script>
 <script th:src="@{/js/bootstrap.min.js}"></script>

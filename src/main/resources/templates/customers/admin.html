@@ -10,6 +10,7 @@
           rel="stylesheet">
 </head>
 <body>
+<p id="timer"></p>
 <table class="table">
     <thead>
     <tr>
@@ -59,6 +60,18 @@
     </tr>
     </tbody>
 </table>
+<script th:inline="javascript">
+    const timer = document.querySelector("#timer");
+
+    let time = 60;
+    setInterval(() => {
+        if (time === 0) location.replace(location.href);
+        if (time > 0) {
+            time--;
+            timer.textContent = `${time}초 뒤 새로고침 됩니다.`;
+        }
+    }, 1000);
+</script>
 <script th:src="@{/js/bootstrap.min.js}"></script>
 </body>
 </html>

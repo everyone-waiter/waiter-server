@@ -8,7 +8,7 @@ import lombok.ToString;
 @Setter
 @ToString
 public class Customer {
-	private Long id;
+	private String id;
 	private Long waitingNumber;
 	private Long waitingTurn;
 	private int adult;

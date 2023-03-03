@@ -5,15 +5,14 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.atomic.AtomicLong;
 
 import org.springframework.stereotype.Repository;
 
 @Repository
 public class MemoryCustomerRepository implements CustomerRepository {
-	private final Map<Long, Customer> memoryRepository = new ConcurrentHashMap<>();
-	private AtomicLong sequence = new AtomicLong(0);
+	private final Map<String, Customer> memoryRepository = new ConcurrentHashMap<>();
 
 	@Override
 	public Optional<Customer> findByWaitingNumber(Long waitingNumber) {
@@ -40,20 +39,20 @@ public class MemoryCustomerRepository implements CustomerRepository {
 	}
 
 	@Override
-	public Optional<Customer> deleteById(Long id) {
+	public Optional<Customer> deleteById(String id) {
 		Customer removeCustomer = memoryRepository.remove(id);
 		return Optional.of(removeCustomer);
 	}
 
 	@Override
-	public Optional<Customer> findById(Long id) {
+	public Optional<Customer> findById(String id) {
 		Customer customer = memoryRepository.get(id);
 		return Optional.of(customer);
 	}
 
 	@Override
 	public <S extends Customer> S save(S entity) {
-		entity.setId(sequence.incrementAndGet());
+		entity.setId(UUID.randomUUID().toString());
 		memoryRepository.put(entity.getId(), entity);
 		return entity;
 	}
