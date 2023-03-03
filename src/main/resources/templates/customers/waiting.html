@@ -14,8 +14,9 @@
     <div class="row align-items-center g-lg-5 py-5">
         <div class="col-lg-7 text-center text-lg-start">
             <h1 id="waitingCount" class="display-4 fw-bold lh-1 mb-3" th:text="|현재 ${count}팀이 대기 중|">현재 웨이팅 중인 팀 수</h1>
-            <p class="col-lg-10 fs-4" th:if="${count}">잔여 좌석이 없습니다. 입장 대기 등록을 해 주세요.</p>
-            <p class="col-lg-10 fs-4" th:unless="${count}">현재 대기중인 팀이 없습니다. 직원이 안내를 도와드릴거에요.</p>
+            <p id="waitingMessage" class="col-lg-10 fs-4"
+               th:text="${count} ? |잔여 좌석이 없습니다. 입장 대기 등록을 해 주세요.| : |현재 대기중인 팀이 없습니다. 직원이 안내를 도와드릴거에요.|">잔여 좌석이 없습니다.
+                입장 대기 등록을 해 주세요.</p>
         </div>
         <div class="col-md-10 mx-auto col-lg-5">
             <form class="p-4 p-md-5 border rounded-3 bg-light" th:action method="post">
@@ -44,7 +45,8 @@
 </div>
 <script th:inline="javascript">
     const webSocket = new WebSocket("ws://localhost:8080/ws/customers/waiting")
-    const waitingCountDom = document.querySelector("#waitingCount");
+    const waitingCountDom = document.getElementById("waitingCount");
+    const waitingMessageDom = document.getElementById("waitingMessage")
     webSocket.onmessage = onMessage;
 
     function onMessage(msg) {
@@ -53,6 +55,11 @@
                 .then(res => res.json())
                 .then(res => {
                     waitingCountDom.textContent = `현재 ${res}팀이 대기 중`;
+                    if (!!res) {
+                        waitingMessageDom.textContent = '잔여 좌석이 없습니다. 입장 대기 등록을 해 주세요.';
+                    } else {
+                        waitingMessageDom.textContent = '현재 대기중인 팀이 없습니다. 직원이 안내를 도와드릴거에요.';
+                    }
                 })
         }
     }
