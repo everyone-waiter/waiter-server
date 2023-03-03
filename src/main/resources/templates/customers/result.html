@@ -30,7 +30,7 @@
 
     let time = 10;
     setInterval(() => {
-        if (time === 0) location.href = "/customers/waiting"
+        if (time === 0) location.replace("/customers/waiting");
         if (time > 0) {
             time--;
             timer.textContent = `${time}초 뒤 등록 화면으로 이동합니다.`;

@@ -14,4 +14,5 @@ public class Customer {
 	private int adult;
 	private int children;
 	private String phoneNumber;
+	private boolean isReceiveThirdMessage = false;
 }

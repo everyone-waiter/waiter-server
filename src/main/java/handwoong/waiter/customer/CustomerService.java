@@ -1,5 +1,6 @@
 package handwoong.waiter.customer;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,5 +27,13 @@ public class CustomerService {
 		customer.setWaitingNumber(foundCustomer.map(value -> value.getWaitingNumber() + 1).orElse(1L));
 		customer.setWaitingTurn(getWaitingCount());
 		return customerRepository.save(customer);
+	}
+
+	public List<Customer> getWaitingList() {
+		return customerRepository.findAll();
+	}
+
+	public Customer deleteWaiting(String id) {
+		return customerRepository.deleteById(id).orElseThrow();
 	}
 }
