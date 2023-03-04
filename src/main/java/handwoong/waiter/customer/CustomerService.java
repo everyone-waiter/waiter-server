@@ -6,16 +6,19 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import handwoong.waiter.message.MessageService;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Service
 public class CustomerService {
 	private final CustomerRepository customerRepository;
+	private final MessageService messageService;
 
 	@Autowired
-	public CustomerService(CustomerRepository customerRepository) {
+	public CustomerService(CustomerRepository customerRepository, MessageService messageService) {
 		this.customerRepository = customerRepository;
+		this.messageService = messageService;
 	}
 
 	public List<Customer> getWaitingList() {
