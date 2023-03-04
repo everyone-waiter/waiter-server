@@ -3,10 +3,10 @@ package handwoong.waiter.message.request.kakao.messages;
 public class KakaoButton {
 	private final ButtonType type;
 	private final String name;
-	private String linkMobile;
-	private String linkPc;
-	private String schemeIos;
-	private String schemeAndroid;
+	private final String linkMobile;
+	private final String linkPc;
+	private final String schemeIos;
+	private final String schemeAndroid;
 
 	public static class Builder {
 		private final ButtonType type;

@@ -7,10 +7,10 @@ import handwoong.waiter.message.request.kakao.messages.KaKaoMessage;
 public class KakaoBody {
 	private final String plusFriendId;
 	private final List<KaKaoMessage> messages;
-	private String templateCode;
-	private String reserveTime;
-	private String reserveTimeZone;
-	private String scheduleCode;
+	private final String templateCode;
+	private final String reserveTime;
+	private final String reserveTimeZone;
+	private final String scheduleCode;
 
 	public static class Builder {
 		private final String plusFriendId;

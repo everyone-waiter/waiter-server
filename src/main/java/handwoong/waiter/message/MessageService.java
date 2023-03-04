@@ -49,9 +49,7 @@ public class MessageService {
 		Exception {
 		return header.createHeader(url)
 					 .url("https://sens.apigw.ntruss.com" + url)
-					 .post(
-						 RequestBody.create(MediaType.parse("application/json"),
-							 mapper.writeValueAsString(messageBody)))
+					 .post(RequestBody.create(mapper.writeValueAsString(messageBody), MediaType.parse("application/json")))
 					 .build();
 	}
 }

@@ -3,17 +3,17 @@ package handwoong.waiter.message.request.kakao.messages;
 import java.util.List;
 
 public class KaKaoMessage {
-	private boolean isAd;
-	private KakaoImage image;
-	private String countryCode;
+	private final boolean isAd;
+	private final KakaoImage image;
+	private final String countryCode;
 	private final String to;
-	private String title;
+	private final String title;
 	private final String content;
-	private String headerContent;
-	private KakaoItemTitleAndDescription itemHighlight;
-	private KakaoItem item;
-	private List<KakaoButton> buttons;
-	private boolean useSmsFailover;
+	private final String headerContent;
+	private final KakaoItemTitleAndDescription itemHighlight;
+	private final KakaoItem item;
+	private final List<KakaoButton> buttons;
+	private final boolean useSmsFailover;
 
 	public static class Builder {
 		private boolean isAd;
