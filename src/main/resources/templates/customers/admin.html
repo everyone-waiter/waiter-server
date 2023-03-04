@@ -100,6 +100,18 @@
         return result;
     }
 
+    const sendAlimTalk = (customerId) => {
+        fetch(`/customers/waiting/notice/${customerId}`, {method: 'POST'})
+            .then(res => res.json())
+            .then(res => {
+                if (res === 'ok') {
+                    alert("전송 완료")
+                } else {
+                    alert("전송 실패!!")
+                }
+            })
+    }
+
     const deleteWaiting = (customerId) => {
         if (window.confirm("입장이 완료되었나요?")) {
             fetch(`/customers/waiting/delete/${customerId}`, {method: 'DELETE'})

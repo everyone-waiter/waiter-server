@@ -2,9 +2,10 @@ package handwoong.waiter.message.request.kakao;
 
 import java.util.List;
 
+import handwoong.waiter.message.request.MessageBody;
 import handwoong.waiter.message.request.kakao.messages.KaKaoMessage;
 
-public class KakaoBody {
+public class KakaoBody implements MessageBody {
 	private final String plusFriendId;
 	private final List<KaKaoMessage> messages;
 	private final String templateCode;

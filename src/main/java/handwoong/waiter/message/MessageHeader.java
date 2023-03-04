@@ -8,16 +8,12 @@ import org.apache.tomcat.util.codec.binary.Base64;
 import okhttp3.Request;
 
 public class MessageHeader {
-	private final String sendType;
 	private final String accessKey;
 	private final String secretKey;
-	private final String serviceId;
 
-	public MessageHeader(String sendType, String accessKey, String secretKey, String serviceId) {
-		this.sendType = sendType;
+	public MessageHeader(String accessKey, String secretKey) {
 		this.accessKey = accessKey;
 		this.secretKey = secretKey;
-		this.serviceId = serviceId;
 	}
 
 	public Request.Builder createHeader(String url) throws Exception {
@@ -49,8 +45,6 @@ public class MessageHeader {
 		mac.init(signingKey);
 
 		byte[] rawHmac = mac.doFinal(message.getBytes("UTF-8"));
-		String encodeBase64String = Base64.encodeBase64String(rawHmac);
-
-		return encodeBase64String;
+		return Base64.encodeBase64String(rawHmac);
 	}
 }

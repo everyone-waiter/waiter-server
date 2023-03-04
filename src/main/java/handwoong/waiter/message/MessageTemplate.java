@@ -1,29 +1,29 @@
 package handwoong.waiter.message;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import handwoong.waiter.customer.Customer;
+import handwoong.waiter.message.request.MessageBody;
 import handwoong.waiter.message.request.kakao.KakaoBody;
 import handwoong.waiter.message.request.kakao.messages.ButtonType;
 import handwoong.waiter.message.request.kakao.messages.KaKaoMessage;
 import handwoong.waiter.message.request.kakao.messages.KakaoButton;
 
 public class MessageTemplate {
-	public KakaoBody createRegisterMessage(Customer customer) {
-		return getRegisterMessage(customer);
+	private final Map<TemplateType, MessageBody> adaptor = new HashMap<>();
+
+	public MessageTemplate(Customer customer) {
+		adaptor.put(TemplateType.REGISTER, getRegisterMessage(customer));
+		adaptor.put(TemplateType.ENTER, getEnterMessage(customer));
+		adaptor.put(TemplateType.READY, getReadyMessage(customer));
+		adaptor.put(TemplateType.CANCEL, getCancelMessage(customer));
 	}
 
-	public KakaoBody createEnterMessage(Customer customer) {
-		return getEnterMessage(customer);
-	}
-
-	public KakaoBody createReadyMessage(Customer customer) {
-		return getReadyMessage(customer);
-	}
-
-	public KakaoBody createCancelMessage(Customer customer) {
-		return getCancelMessage(customer);
+	public MessageBody createTemplate(TemplateType type) {
+		return adaptor.get(type);
 	}
 
 	private KakaoBody getRegisterMessage(Customer customer) {
@@ -124,7 +124,7 @@ public class MessageTemplate {
 		KaKaoMessage message = new KaKaoMessage.Builder(customer.getPhoneNumber(), "안녕하세요.\n"
 			+ "나루 coffee & restaurant입니다.\n"
 			+ "\n"
-			+ "대기번호 #{waitingNumber}번 고객님 대기 취소가 완료되었습니다.\n"
+			+ "대기번호 " + customer.getWaitingNumber() + "번 고객님 대기 취소가 완료되었습니다.\n"
 			+ "\n"
 			+ "오늘도 좋은 하루 보내세요.")
 			.build();

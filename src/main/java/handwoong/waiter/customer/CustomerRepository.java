@@ -14,6 +14,8 @@ public interface CustomerRepository {
 
 	Optional<Customer> findById(String id);
 
+	Customer updateById(String id, Customer customer);
+
 	<S extends Customer> S save(S entity);
 
 	long count();

@@ -7,6 +7,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import handwoong.waiter.message.MessageService;
+import handwoong.waiter.message.MessageTemplate;
+import handwoong.waiter.message.MessageType;
+import handwoong.waiter.message.TemplateType;
+import handwoong.waiter.message.request.MessageBody;
+import handwoong.waiter.message.response.MessageResponse;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -45,7 +50,9 @@ public class CustomerService {
 		Optional<Customer> foundCustomer = customerRepository.findFirstByOrderByWaitingNumberDesc();
 		customer.setWaitingNumber(foundCustomer.map(value -> value.getWaitingNumber() + 1).orElse(1L));
 		customer.setWaitingTurn(getWaitingCount());
-		return customerRepository.save(customer);
+		Customer saveCustomer = customerRepository.save(customer);
+		sendAlimTalk(saveCustomer, TemplateType.REGISTER);
+		return saveCustomer;
 	}
 
 	public Customer getCustomerById(String id) {
@@ -58,7 +65,41 @@ public class CustomerService {
 
 	public Customer cancelWaiting(String customerId) {
 		Customer deleteCustomer = deleteWaiting(customerId);
-		// TODO 취소 메시지 전송
+		sendAlimTalk(deleteCustomer, TemplateType.CANCEL);
 		return deleteCustomer;
+	}
+
+	public void enterNotice(String customerId) {
+		Customer foundCustomer = getCustomerById(customerId);
+		sendAlimTalk(foundCustomer, TemplateType.ENTER);
+
+		Customer firstCustomer = customerRepository.findFirstByOrderByWaitingNumberAsc().orElseThrow();
+		if (!isFindCustomerFirst(foundCustomer, firstCustomer))
+			return;
+		customerRepository.findByWaitingNumber(firstCustomer.getWaitingNumber() + 2)
+						  .ifPresent(this::sendEnterReady);
+	}
+
+	private void sendEnterReady(Customer thirdCustomer) {
+		if (thirdCustomer.isReceiveThirdMessage()) {
+			return;
+		}
+		sendAlimTalk(thirdCustomer, TemplateType.READY);
+		thirdCustomer.setReceiveThirdMessage(true);
+		customerRepository.updateById(thirdCustomer.getId(), thirdCustomer);
+	}
+
+	private boolean isFindCustomerFirst(Customer foundCustomer, Customer firstCustomer) {
+		if (firstCustomer.getWaitingNumber().equals(foundCustomer.getWaitingNumber())) {
+			return true;
+		}
+		return false;
+	}
+
+	public void sendAlimTalk(Customer customer, TemplateType type) {
+		MessageBody messageBody = new MessageTemplate(customer).createTemplate(type);
+		MessageResponse response = messageService.send(MessageType.ALIMTALK, messageBody);
+		log.info("[Send AlimTalk] Customer PhoneNumber = {}, StatusCode = {}, StatusName = {}",
+			customer.getPhoneNumber(), response.getStatusCode(), response.getStatusName());
 	}
 }

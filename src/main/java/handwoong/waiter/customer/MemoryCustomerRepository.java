@@ -51,6 +51,11 @@ public class MemoryCustomerRepository implements CustomerRepository {
 	}
 
 	@Override
+	public Customer updateById(String id, Customer customer) {
+		return memoryRepository.put(id, customer);
+	}
+
+	@Override
 	public <S extends Customer> S save(S entity) {
 		entity.setId(UUID.randomUUID().toString());
 		memoryRepository.put(entity.getId(), entity);

@@ -72,6 +72,15 @@ public class CustomerController {
 		return "redirect:/customers/waiting/result";
 	}
 
+	@PostMapping("/notice/{customerId}")
+	@ResponseBody
+	public String waitingNotice(@PathVariable String customerId) {
+		log.info("[POST] Request Send Waiting Notice CustomerId = {}", customerId);
+		customerService.enterNotice(customerId);
+		log.info("[POST] Response Send Waiting Notice OK CustomerId = {}", customerId);
+		return "ok";
+	}
+
 	@GetMapping("/reload")
 	@ResponseBody
 	public long waitingCountReload() {

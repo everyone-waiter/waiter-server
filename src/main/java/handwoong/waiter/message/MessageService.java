@@ -5,7 +5,7 @@ import org.jetbrains.annotations.NotNull;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import handwoong.waiter.message.request.kakao.KakaoBody;
+import handwoong.waiter.message.request.MessageBody;
 import handwoong.waiter.message.response.MessageResponse;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
@@ -24,7 +24,7 @@ public class MessageService {
 		this.serviceId = serviceId;
 	}
 
-	public MessageResponse send(MessageType messageType, KakaoBody messageBody) {
+	public MessageResponse send(MessageType messageType, MessageBody messageBody) {
 		String sendType = messageType.name().toLowerCase();
 		String url = "/" + sendType + "/v2/services/" + serviceId + "/messages";
 
@@ -32,7 +32,7 @@ public class MessageService {
 		OkHttpClient client = new OkHttpClient();
 
 		try {
-			MessageHeader header = new MessageHeader(sendType, accessKey, secretKey, serviceId);
+			MessageHeader header = new MessageHeader(accessKey, secretKey);
 			Request request = createRequest(messageBody, url, mapper, header);
 			Response response = client.newCall(request).execute();
 			assert response.body() != null;
@@ -45,7 +45,7 @@ public class MessageService {
 	}
 
 	@NotNull
-	private Request createRequest(KakaoBody messageBody, String url, ObjectMapper mapper, MessageHeader header) throws
+	private Request createRequest(MessageBody messageBody, String url, ObjectMapper mapper, MessageHeader header) throws
 		Exception {
 		return header.createHeader(url)
 					 .url("https://sens.apigw.ntruss.com" + url)
