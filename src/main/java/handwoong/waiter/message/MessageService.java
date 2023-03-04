@@ -6,7 +6,7 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import handwoong.waiter.message.request.kakao.KakaoBody;
-import handwoong.waiter.message.response.KakaoResponse;
+import handwoong.waiter.message.response.MessageResponse;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -24,7 +24,7 @@ public class MessageService {
 		this.serviceId = serviceId;
 	}
 
-	public KakaoResponse send(MessageType messageType, KakaoBody messageBody) {
+	public MessageResponse send(MessageType messageType, KakaoBody messageBody) {
 		String sendType = messageType.name().toLowerCase();
 		String url = "/" + sendType + "/v2/services/" + serviceId + "/messages";
 
@@ -36,7 +36,7 @@ public class MessageService {
 			Request request = createRequest(messageBody, url, mapper, header);
 			Response response = client.newCall(request).execute();
 			assert response.body() != null;
-			return mapper.readValue(response.body().string(), KakaoResponse.class);
+			return mapper.readValue(response.body().string(), MessageResponse.class);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
