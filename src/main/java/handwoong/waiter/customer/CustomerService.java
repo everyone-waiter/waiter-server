@@ -6,13 +6,13 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import handwoong.waiter.message.MessageService;
 import handwoong.waiter.message.MessageTemplate;
-import handwoong.waiter.message.MessageType;
 import handwoong.waiter.message.TemplateType;
-import handwoong.waiter.message.request.MessageBody;
-import handwoong.waiter.message.response.MessageResponse;
 import lombok.extern.slf4j.Slf4j;
+import sens.MessageService;
+import sens.MessageType;
+import sens.request.MessageBody;
+import sens.response.MessageResponse;
 
 @Slf4j
 @Service

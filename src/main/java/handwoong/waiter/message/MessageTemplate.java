@@ -6,11 +6,11 @@ import java.util.List;
 import java.util.Map;
 
 import handwoong.waiter.customer.Customer;
-import handwoong.waiter.message.request.MessageBody;
-import handwoong.waiter.message.request.kakao.KakaoBody;
-import handwoong.waiter.message.request.kakao.messages.ButtonType;
-import handwoong.waiter.message.request.kakao.messages.KaKaoMessage;
-import handwoong.waiter.message.request.kakao.messages.KakaoButton;
+import sens.request.MessageBody;
+import sens.request.kakao.KakaoRequestBody;
+import sens.request.kakao.messages.ButtonType;
+import sens.request.kakao.messages.KaKaoMessage;
+import sens.request.kakao.messages.KakaoButton;
 
 public class MessageTemplate {
 	private final Map<TemplateType, MessageBody> adaptor = new HashMap<>();
@@ -26,38 +26,38 @@ public class MessageTemplate {
 		return adaptor.get(type);
 	}
 
-	private KakaoBody getRegisterMessage(Customer customer) {
+	private KakaoRequestBody getRegisterMessage(Customer customer) {
 		List<KakaoButton> buttonList = new ArrayList<>();
 		buttonList.add(createMenuInfoButton());
 		buttonList.add(createCheckTurn(customer));
 		buttonList.add(createCancelButton(customer));
 		List<KaKaoMessage> registerBodyMessage = createRegisterBodyMessage(customer, buttonList);
-		return new KakaoBody.Builder("@narurestaurant", registerBodyMessage)
+		return new KakaoRequestBody.Builder("@narurestaurant", registerBodyMessage)
 			.templateCode("waitingRegister")
 			.build();
 	}
 
-	private KakaoBody getEnterMessage(Customer customer) {
+	private KakaoRequestBody getEnterMessage(Customer customer) {
 		List<KakaoButton> buttonList = new ArrayList<>();
 		buttonList.add(createCancelButton(customer));
 		List<KaKaoMessage> enterBodyMessage = createEnterBodyMessage(customer, buttonList);
-		return new KakaoBody.Builder("@narurestaurant", enterBodyMessage)
+		return new KakaoRequestBody.Builder("@narurestaurant", enterBodyMessage)
 			.templateCode("CustomerEnter")
 			.build();
 	}
 
-	private KakaoBody getReadyMessage(Customer customer) {
+	private KakaoRequestBody getReadyMessage(Customer customer) {
 		List<KakaoButton> buttonList = new ArrayList<>();
 		buttonList.add(createCancelButton(customer));
 		List<KaKaoMessage> readyBodyMessage = createReadyBodyMessage(customer, buttonList);
-		return new KakaoBody.Builder("@narurestaurant", readyBodyMessage)
+		return new KakaoRequestBody.Builder("@narurestaurant", readyBodyMessage)
 			.templateCode("waitingReady")
 			.build();
 	}
 
-	private KakaoBody getCancelMessage(Customer customer) {
+	private KakaoRequestBody getCancelMessage(Customer customer) {
 		List<KaKaoMessage> cancelMessage = createCancelBodyMessage(customer);
-		return new KakaoBody.Builder("@narurestaurant", cancelMessage)
+		return new KakaoRequestBody.Builder("@narurestaurant", cancelMessage)
 			.templateCode("waitingCancel")
 			.build();
 	}
