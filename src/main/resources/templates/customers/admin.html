@@ -103,15 +103,19 @@
     }
 
     const sendAlimTalk = (customerId) => {
-        fetch(`/customers/waiting/notice/${customerId}`, {method: 'POST'})
-            .then(res => res.json())
-            .then(res => {
-                if (res === 'ok') {
-                    alert("전송 완료")
-                } else {
-                    alert("전송 실패!!")
-                }
-            })
+        if (window.confirm("입장 메시지를 보낼까요?")) {
+            fetch(`/customers/waiting/notice/${customerId}`, {method: 'POST'})
+                .then(res => res.text())
+                .then(res => {
+                    console.log(`res = ${res}`)
+                    console.log(res === 'ok')
+                    if (res === 'ok') {
+                        alert("전송 완료")
+                    } else {
+                        alert("전송 실패!!")
+                    }
+                })
+        }
     }
 
     const deleteWaiting = (customerId) => {

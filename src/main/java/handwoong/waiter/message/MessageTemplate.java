@@ -33,7 +33,7 @@ public class MessageTemplate {
 		buttonList.add(createCancelButton(customer));
 		List<KaKaoMessage> registerBodyMessage = createRegisterBodyMessage(customer, buttonList);
 		return new KakaoRequestBody.Builder("@narurestaurant", registerBodyMessage)
-			.templateCode("waitingRegister")
+			.templateCode("waitingRegisterFinal")
 			.build();
 	}
 
