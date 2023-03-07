@@ -10,11 +10,10 @@
           rel="stylesheet">
 </head>
 <body>
-<p id="timer"></p>
 <table class="table">
     <thead>
     <tr>
-        <th scope="col">#</th>
+        <th scope="col">대기번호</th>
         <th scope="col">어른</th>
         <th scope="col">아이</th>
         <th scope="col">메시지</th>
@@ -107,8 +106,6 @@
             fetch(`/customers/waiting/notice/${customerId}`, {method: 'POST'})
                 .then(res => res.text())
                 .then(res => {
-                    console.log(`res = ${res}`)
-                    console.log(res === 'ok')
                     if (res === 'ok') {
                         alert("전송 완료")
                     } else {

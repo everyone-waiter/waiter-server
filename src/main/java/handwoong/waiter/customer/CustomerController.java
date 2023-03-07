@@ -31,6 +31,7 @@ public class CustomerController {
 	public String waitingForm(Model model) {
 		long waitingCount = customerService.getWaitingCount();
 		model.addAttribute("count", waitingCount);
+		model.addAttribute("customer", new Customer());
 		return "customers/waiting";
 	}
 
@@ -44,7 +45,7 @@ public class CustomerController {
 	public String waitingTurn(@PathVariable String customerId, Model model) {
 		Customer customer = customerService.getWaitingMyTurn(customerId);
 		model.addAttribute("customer", customer);
-		return "/customers/turn";
+		return "customers/turn";
 	}
 
 	@GetMapping("/cancel/{customerId}")

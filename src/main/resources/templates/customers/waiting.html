@@ -15,25 +15,23 @@
         <div class="col-lg-7 text-center text-lg-start">
             <h1 id="waitingCount" class="display-4 fw-bold lh-1 mb-3" th:text="|현재 ${count}팀이 대기 중|">현재 웨이팅 중인 팀 수</h1>
             <p id="waitingMessage" class="col-lg-10 fs-4"
-               th:text="${count} ? |잔여 좌석이 없습니다. 입장 대기 등록을 해 주세요.| : |현재 대기중인 팀이 없습니다. 직원이 안내를 도와드릴거에요.|">잔여 좌석이 없습니다.
+               th:text="${count} ? _ : |현재 대기중인 팀이 없습니다. 직원이 안내를 도와드릴거에요.|">잔여 좌석이 없습니다.
                 입장 대기 등록을 해 주세요.</p>
         </div>
         <div class="col-md-10 mx-auto col-lg-5">
-            <form class="p-4 p-md-5 border rounded-3 bg-light" th:action method="post">
+            <form class="p-4 p-md-5 border rounded-3 bg-light" th:action th:object="${customer}" method="post">
                 <p class="col-lg-10 fs-4">인원 수와 휴대폰 번호를 입력 해 주세요.</p>
                 <div class="form-floating mb-3">
-                    <input type="number" name="adult" class="form-control" id="floatingAdultInput" placeholder="0">
-                    <label for="floatingAdultInput">성인</label>
+                    <input type="number" class="form-control" placeholder="0" th:field="*{adult}">
+                    <label for="adult">성인</label>
                 </div>
                 <div class="form-floating mb-3">
-                    <input type="number" name="children" class="form-control" id="floatingChildrenInput"
-                           placeholder="0">
-                    <label for="floatingChildrenInput">아동</label>
+                    <input type="number" class="form-control" placeholder="0" th:field="*{children}">
+                    <label for="children">아동</label>
                 </div>
                 <div class="form-floating mb-3">
-                    <input type="number" name="phoneNumber" class="form-control" id="floatingPassword"
-                           placeholder="01012345678">
-                    <label for="floatingPassword">휴대폰 번호</label>
+                    <input type="number" class="form-control" placeholder="01012345678" th:field="*{phoneNumber}">
+                    <label for="phoneNumber">휴대폰 번호</label>
                 </div>
                 <button class="w-100 btn btn-lg btn-primary" type="submit">등록하기</button>
                 <small class="text-muted">카카오 알림톡으로 안내 해 드리고 있어요.</small>
