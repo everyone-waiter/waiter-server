@@ -5,8 +5,11 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.Errors;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -36,8 +39,7 @@ public class CustomerController {
 	}
 
 	@GetMapping("/result")
-	public String registerResult(Customer customer, Model model) {
-		model.addAttribute("customer", customer);
+	public String registerResult(@ModelAttribute Customer customer) {
 		return "customers/result";
 	}
 
@@ -65,7 +67,12 @@ public class CustomerController {
 	// ==============================
 
 	@PostMapping
-	public String waitingRegister(Customer customer, RedirectAttributes redirectAttributes) {
+	public String waitingRegister(@Validated Customer customer, Errors error, Model model, RedirectAttributes redirectAttributes) {
+		if (error.hasErrors()) {
+			long waitingCount = customerService.getWaitingCount();
+			model.addAttribute("count", waitingCount);
+			return "customers/waiting";
+		}
 		log.info("[POST] Waiting Register RequestBody is {}", customer);
 		Customer saveCustomer = customerService.waitingRegister(customer);
 		redirectAttributes.addFlashAttribute("customer", saveCustomer);

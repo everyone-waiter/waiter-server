@@ -8,6 +8,12 @@
     <link th:href="@{/css/bootstrap.min.css}"
           href="../../static/css/bootstrap.min.css"
           rel="stylesheet">
+    <style>
+        .field-error {
+            border-color: red;
+            color: red;
+        }
+    </style>
 </head>
 <body>
 <div class="container col-xl-10 col-xxl-8 px-4 py-5">
@@ -22,16 +28,28 @@
             <form class="p-4 p-md-5 border rounded-3 bg-light" th:action th:object="${customer}" method="post">
                 <p class="col-lg-10 fs-4">인원 수와 휴대폰 번호를 입력 해 주세요.</p>
                 <div class="form-floating mb-3">
-                    <input type="number" class="form-control" placeholder="0" th:field="*{adult}">
+                    <input type="number" class="form-control" placeholder="0"
+                           th:field="*{adult}"
+                           th:errorclass="field-error"
+                    >
                     <label for="adult">성인</label>
+                    <p class="field-error" th:errors="*{adult}">성인 인원 오류</p>
                 </div>
                 <div class="form-floating mb-3">
-                    <input type="number" class="form-control" placeholder="0" th:field="*{children}">
+                    <input type="number" class="form-control" placeholder="0"
+                           th:field="*{children}"
+                           th:errorclass="field-error"
+                    >
                     <label for="children">아동</label>
+                    <p class="field-error" th:errors="*{children}">아동 인원 오류</p>
                 </div>
                 <div class="form-floating mb-3">
-                    <input type="number" class="form-control" placeholder="01012345678" th:field="*{phoneNumber}">
+                    <input type="number" class="form-control" placeholder="01012345678"
+                           th:field="*{phoneNumber}"
+                           th:errorclass="field-error"
+                    >
                     <label for="phoneNumber">휴대폰 번호</label>
+                    <p class="field-error" th:errors="*{phoneNumber}">휴대폰 번호 오류</p>
                 </div>
                 <button class="w-100 btn btn-lg btn-primary" type="submit">등록하기</button>
                 <small class="text-muted">카카오 알림톡으로 안내 해 드리고 있어요.</small>

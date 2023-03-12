@@ -51,7 +51,7 @@ public class CustomerService {
 		customer.setWaitingNumber(foundCustomer.map(value -> value.getWaitingNumber() + 1).orElse(1L));
 		customer.setWaitingTurn(getWaitingCount());
 		Customer saveCustomer = customerRepository.save(customer);
-		sendAlimTalk(saveCustomer, TemplateType.REGISTER);
+		// sendAlimTalk(saveCustomer, TemplateType.REGISTER);
 		return saveCustomer;
 	}
 
@@ -81,11 +81,11 @@ public class CustomerService {
 	}
 
 	private void sendEnterReady(Customer thirdCustomer) {
-		if (thirdCustomer.isReceiveThirdMessage()) {
+		if (thirdCustomer.isSendMessage()) {
 			return;
 		}
 		sendAlimTalk(thirdCustomer, TemplateType.READY);
-		thirdCustomer.setReceiveThirdMessage(true);
+		thirdCustomer.setSendMessage(true);
 		customerRepository.updateById(thirdCustomer.getId(), thirdCustomer);
 	}
 

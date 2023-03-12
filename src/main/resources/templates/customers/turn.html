@@ -10,12 +10,17 @@
           rel="stylesheet">
 </head>
 <body>
-<div class="px-4 pt-5 my-5 text-center border-bottom">
+<div class="px-4 pt-5 my-5 text-center border-bottom" th:if="${customer.id}">
     <h1 class="display-4 fw-bold" th:text="|대기번호 : ${customer.waitingNumber}|">고객님의 대기 번호</h1>
     <div class="col-lg-6 mx-auto">
         <h2 class="lead mb-4" th:text="|내 앞 대기팀 : ${customer.waitingTurn}|">고객님의 대기 순번</h2>
     </div>
 </div>
+<script>
+    if (![[${customer}]]) {
+        alert("존재하지 않는 대기번호 입니다.")
+    }
+</script>
 <script th:src="@{/js/bootstrap.min.js}"></script>
 </body>
 </html>
