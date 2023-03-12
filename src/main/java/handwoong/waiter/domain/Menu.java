@@ -5,6 +5,7 @@ import static jakarta.persistence.FetchType.*;
 import java.sql.Timestamp;
 
 import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import jakarta.persistence.Entity;
@@ -49,5 +50,6 @@ public class Menu {
 	@CreatedDate
 	private Timestamp createdAt;
 
+	@LastModifiedDate
 	private Timestamp updatedAt;
 }
