@@ -36,9 +36,9 @@ public class Waiting {
 	@JoinColumn(name = "member_id")
 	private Member member;
 
-	private Long waitingNumber;
+	private int waitingNumber;
 
-	private Long waitingTurn;
+	private int waitingTurn;
 
 	private int adult;
 
@@ -46,11 +46,13 @@ public class Waiting {
 
 	private String phoneNumber;
 
+	private boolean isSendMessage = false;
+
 	@CreatedDate
 	private Timestamp createdAt;
 
 	@Builder
-	private Waiting(Member member, Long waitingNumber, Long waitingTurn, int adult, int children, String phoneNumber) {
+	private Waiting(Member member, int waitingNumber, int waitingTurn, int adult, int children, String phoneNumber) {
 		this.member = member;
 		this.waitingNumber = waitingNumber;
 		this.waitingTurn = waitingTurn;
@@ -59,7 +61,7 @@ public class Waiting {
 		this.phoneNumber = phoneNumber;
 	}
 
-	public Waiting createWaiting(Member member, Long waitingNumber, Long waitingTurn, int adult, int children, String phoneNumber) {
+	public static Waiting createWaiting(Member member, int waitingNumber, int waitingTurn, int adult, int children, String phoneNumber) {
 		Waiting waiting = Waiting.builder()
 								 .member(member)
 								 .waitingNumber(waitingNumber)
@@ -72,7 +74,15 @@ public class Waiting {
 		return waiting;
 	}
 
-	public void cancelWaiting() {
+	public void cancel() {
 		member.removeWaiting(this);
+	}
+
+	public void decreaseTurn() {
+		waitingTurn--;
+	}
+
+	public void changeStatus() {
+		isSendMessage = true;
 	}
 }

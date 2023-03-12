@@ -75,5 +75,7 @@ public class Member {
 		if (!isRemoveWaiting) {
 			throw new IllegalStateException("존재하지 않는 웨이팅입니다.");
 		}
+
+		waitingList.forEach(Waiting::decreaseTurn);
 	}
 }

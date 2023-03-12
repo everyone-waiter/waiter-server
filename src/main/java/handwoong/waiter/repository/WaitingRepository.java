@@ -19,8 +19,8 @@ public class WaitingRepository {
 		em.persist(waiting);
 	}
 
-	public Waiting findOne(UUID id) {
-		return em.find(Waiting.class, id);
+	public Waiting findOne(UUID waitingId) {
+		return em.find(Waiting.class, waitingId);
 	}
 
 	public List<Waiting> findAll(UUID memberId) {
