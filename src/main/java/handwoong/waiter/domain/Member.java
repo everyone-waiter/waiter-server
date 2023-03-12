@@ -1,19 +1,27 @@
 package handwoong.waiter.domain;
 
-import java.time.LocalDateTime;
+import java.sql.Timestamp;
 import java.util.UUID;
 
 import org.hibernate.annotations.GenericGenerator;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EntityListeners;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
-@Entity
 @Getter
+@Entity
+@EntityListeners(AuditingEntityListener.class)
+@NoArgsConstructor
+@AllArgsConstructor
 public class Member {
 	@Id
 	@GeneratedValue(generator = "uuid2")
@@ -31,16 +39,16 @@ public class Member {
 
 	private int money;
 
-	private LocalDateTime createdAt;
+	@CreatedDate
+	private Timestamp createdAt;
 
 	@Builder
-	public Member(UUID id, String phoneNumber, String name, String email, String password, int money, LocalDateTime createdAt) {
+	public Member(UUID id, String phoneNumber, String name, String email, String password, int money) {
 		this.id = id;
 		this.phoneNumber = phoneNumber;
 		this.name = name;
 		this.email = email;
 		this.password = password;
 		this.money = money;
-		this.createdAt = createdAt;
 	}
 }
