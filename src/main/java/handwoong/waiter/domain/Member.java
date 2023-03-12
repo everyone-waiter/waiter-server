@@ -12,7 +12,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
-import lombok.AllArgsConstructor;
+import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -20,8 +20,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @Entity
 @EntityListeners(AuditingEntityListener.class)
-@NoArgsConstructor
-@AllArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Member {
 	@Id
 	@GeneratedValue(generator = "uuid2")
@@ -43,8 +42,7 @@ public class Member {
 	private Timestamp createdAt;
 
 	@Builder
-	public Member(UUID id, String phoneNumber, String name, String email, String password, int money) {
-		this.id = id;
+	public Member(String phoneNumber, String name, String email, String password, int money) {
 		this.phoneNumber = phoneNumber;
 		this.name = name;
 		this.email = email;

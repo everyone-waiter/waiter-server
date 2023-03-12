@@ -16,15 +16,15 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import lombok.AllArgsConstructor;
+import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
 @Entity
 @EntityListeners(AuditingEntityListener.class)
-@NoArgsConstructor
-@AllArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Menu {
 	@Id
 	@GeneratedValue
@@ -52,4 +52,15 @@ public class Menu {
 
 	@LastModifiedDate
 	private Timestamp updatedAt;
+
+	@Builder
+	public Menu(Category category, String name, String description, String notice, MenuState status, String image, int sort) {
+		this.category = category;
+		this.name = name;
+		this.description = description;
+		this.notice = notice;
+		this.status = status;
+		this.image = image;
+		this.sort = sort;
+	}
 }

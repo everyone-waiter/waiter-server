@@ -15,15 +15,15 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import lombok.AllArgsConstructor;
+import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
 @Entity
 @EntityListeners(AuditingEntityListener.class)
-@NoArgsConstructor
-@AllArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Category {
 	@Id
 	@GeneratedValue
@@ -41,4 +41,10 @@ public class Category {
 
 	@LastModifiedDate
 	private Timestamp updatedAt;
+
+	@Builder
+	public Category(Member member, String name) {
+		this.member = member;
+		this.name = name;
+	}
 }

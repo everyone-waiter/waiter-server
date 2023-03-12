@@ -16,15 +16,15 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import lombok.AllArgsConstructor;
+import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
 @Entity
 @EntityListeners(AuditingEntityListener.class)
-@NoArgsConstructor
-@AllArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Waiting {
 	@Id
 	@GeneratedValue(generator = "uuid2")
@@ -48,4 +48,22 @@ public class Waiting {
 
 	@CreatedDate
 	private Timestamp createdAt;
+
+	public void setWaitingNumber(Long waitingCount) {
+		this.waitingNumber = waitingCount + 1;
+	}
+
+	public void setWaitingTurn(Long waitingCount) {
+		this.waitingTurn = waitingCount;
+	}
+
+	@Builder
+	public Waiting(Member member, Long waitingNumber, Long waitingTurn, int adult, int children, String phoneNumber) {
+		this.member = member;
+		this.waitingNumber = waitingNumber;
+		this.waitingTurn = waitingTurn;
+		this.adult = adult;
+		this.children = children;
+		this.phoneNumber = phoneNumber;
+	}
 }
