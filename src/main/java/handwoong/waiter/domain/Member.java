@@ -1,6 +1,8 @@
 package handwoong.waiter.domain;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 import org.hibernate.annotations.GenericGenerator;
@@ -12,6 +14,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -38,6 +41,9 @@ public class Member {
 
 	private String phoneNumber;
 
+	@OneToMany(mappedBy = "member")
+	private final List<Waiting> waitingList = new ArrayList<>();
+
 	@CreatedDate
 	private Timestamp createdAt;
 
@@ -58,5 +64,16 @@ public class Member {
 		this.password = password;
 		this.money = money;
 		this.phoneNumber = phoneNumber;
+	}
+
+	public void addWaiting(Waiting waiting) {
+		waitingList.add(waiting);
+	}
+
+	public void removeWaiting(Waiting waiting) {
+		boolean isRemoveWaiting = waitingList.remove(waiting);
+		if (!isRemoveWaiting) {
+			throw new IllegalStateException("존재하지 않는 웨이팅입니다.");
+		}
 	}
 }

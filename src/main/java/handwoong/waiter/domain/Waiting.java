@@ -49,17 +49,6 @@ public class Waiting {
 	@CreatedDate
 	private Timestamp createdAt;
 
-	public Waiting createWaiting(Member member, Long waitingNumber, Long waitingTurn, int adult, int children, String phoneNumber) {
-		return Waiting.builder()
-					  .member(member)
-					  .waitingNumber(waitingNumber)
-					  .waitingTurn(waitingTurn)
-					  .adult(adult)
-					  .children(children)
-					  .phoneNumber(phoneNumber)
-					  .build();
-	}
-
 	@Builder
 	private Waiting(Member member, Long waitingNumber, Long waitingTurn, int adult, int children, String phoneNumber) {
 		this.member = member;
@@ -68,5 +57,22 @@ public class Waiting {
 		this.adult = adult;
 		this.children = children;
 		this.phoneNumber = phoneNumber;
+	}
+
+	public Waiting createWaiting(Member member, Long waitingNumber, Long waitingTurn, int adult, int children, String phoneNumber) {
+		Waiting waiting = Waiting.builder()
+								 .member(member)
+								 .waitingNumber(waitingNumber)
+								 .waitingTurn(waitingTurn)
+								 .adult(adult)
+								 .children(children)
+								 .phoneNumber(phoneNumber)
+								 .build();
+		member.addWaiting(waiting);
+		return waiting;
+	}
+
+	public void cancelWaiting() {
+		member.removeWaiting(this);
 	}
 }

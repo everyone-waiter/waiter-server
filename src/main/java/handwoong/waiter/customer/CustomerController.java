@@ -34,7 +34,7 @@ public class CustomerController {
 	public String waitingForm(Model model) {
 		long waitingCount = customerService.getWaitingCount();
 		model.addAttribute("count", waitingCount);
-		model.addAttribute("customer", new Customer());
+		// model.addAttribute("customer", new Customer());
 		return "customers/waiting";
 	}
 
