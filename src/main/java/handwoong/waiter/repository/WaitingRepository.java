@@ -1,5 +1,8 @@
 package handwoong.waiter.repository;
 
+import java.util.List;
+import java.util.UUID;
+
 import org.springframework.stereotype.Repository;
 
 import handwoong.waiter.domain.Waiting;
@@ -9,9 +12,20 @@ import lombok.RequiredArgsConstructor;
 @Repository
 @RequiredArgsConstructor
 public class WaitingRepository {
+
 	private final EntityManager em;
 
 	public void save(Waiting waiting) {
 		em.persist(waiting);
+	}
+
+	public Waiting findOne(UUID id) {
+		return em.find(Waiting.class, id);
+	}
+
+	public List<Waiting> findAll(UUID memberId) {
+		return em.createQuery("select w from Waiting w join w.member m where m.id = :memberId", Waiting.class)
+				 .setParameter("memberId", memberId)
+				 .getResultList();
 	}
 }
