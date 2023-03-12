@@ -9,6 +9,7 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
+import lombok.Builder;
 import lombok.Getter;
 
 @Entity
@@ -31,4 +32,15 @@ public class Member {
 	private int money;
 
 	private LocalDateTime createdAt;
+
+	@Builder
+	public Member(UUID id, String phoneNumber, String name, String email, String password, int money, LocalDateTime createdAt) {
+		this.id = id;
+		this.phoneNumber = phoneNumber;
+		this.name = name;
+		this.email = email;
+		this.password = password;
+		this.money = money;
+		this.createdAt = createdAt;
+	}
 }
