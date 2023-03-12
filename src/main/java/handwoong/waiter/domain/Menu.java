@@ -53,8 +53,22 @@ public class Menu {
 	@LastModifiedDate
 	private Timestamp updatedAt;
 
+	public static Menu createMenu(
+		Category category, String name, String description, String notice, MenuState status, String image, int sort
+	) {
+		return Menu.builder()
+				   .category(category)
+				   .name(name)
+				   .description(description)
+				   .notice(notice)
+				   .status(status)
+				   .image(image)
+				   .sort(sort)
+				   .build();
+	}
+
 	@Builder
-	public Menu(Category category, String name, String description, String notice, MenuState status, String image, int sort) {
+	private Menu(Category category, String name, String description, String notice, MenuState status, String image, int sort) {
 		this.category = category;
 		this.name = name;
 		this.description = description;

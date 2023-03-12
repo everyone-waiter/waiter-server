@@ -27,11 +27,7 @@ class MemberServiceTest {
 	@DisplayName("회원가입")
 	public void 회원가입() throws Exception {
 		// given
-		Member member = Member.builder()
-							  .email("test@test.com")
-							  .name("handwoong")
-							  .phoneNumber("01012345678")
-							  .build();
+		Member member = Member.createMember("handwoong", "test@test.com", "testpwd", 0, "01012345678");
 
 		// when
 		UUID memberId = memberService.register(member);
@@ -45,11 +41,7 @@ class MemberServiceTest {
 	@DisplayName("회원조회")
 	public void 회원조회() throws Exception {
 		// given
-		Member member = Member.builder()
-							  .email("test@test.com")
-							  .name("handwoong")
-							  .phoneNumber("01012345678")
-							  .build();
+		Member member = Member.createMember("handwoong", "test@test.com", "testpwd", 0, "01012345678");
 
 		// when
 		UUID memberId = memberService.register(member);
@@ -66,16 +58,8 @@ class MemberServiceTest {
 	@DisplayName("회원목록_조회")
 	public void 회원목록_조회() throws Exception {
 		// given
-		Member member1 = Member.builder()
-							   .email("test@test.com")
-							   .name("handwoong")
-							   .phoneNumber("01012345678")
-							   .build();
-		Member member2 = Member.builder()
-							   .email("test@test.com")
-							   .name("handwoong")
-							   .phoneNumber("01012345678")
-							   .build();
+		Member member1 = Member.createMember("handwoong", "test1@test.com", "testpwd", 0, "01012345678");
+		Member member2 = Member.createMember("handwoong", "test2@test.com", "testpwd", 0, "01012345678");
 
 		// when
 		memberService.register(member1);

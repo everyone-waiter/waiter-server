@@ -49,16 +49,19 @@ public class Waiting {
 	@CreatedDate
 	private Timestamp createdAt;
 
-	public void setWaitingNumber(Long waitingCount) {
-		this.waitingNumber = waitingCount + 1;
-	}
-
-	public void setWaitingTurn(Long waitingCount) {
-		this.waitingTurn = waitingCount;
+	public Waiting createWaiting(Member member, Long waitingNumber, Long waitingTurn, int adult, int children, String phoneNumber) {
+		return Waiting.builder()
+					  .member(member)
+					  .waitingNumber(waitingNumber)
+					  .waitingTurn(waitingTurn)
+					  .adult(adult)
+					  .children(children)
+					  .phoneNumber(phoneNumber)
+					  .build();
 	}
 
 	@Builder
-	public Waiting(Member member, Long waitingNumber, Long waitingTurn, int adult, int children, String phoneNumber) {
+	private Waiting(Member member, Long waitingNumber, Long waitingTurn, int adult, int children, String phoneNumber) {
 		this.member = member;
 		this.waitingNumber = waitingNumber;
 		this.waitingTurn = waitingTurn;

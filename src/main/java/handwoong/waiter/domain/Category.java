@@ -42,8 +42,15 @@ public class Category {
 	@LastModifiedDate
 	private Timestamp updatedAt;
 
+	public static Category createCategory(Member member, String name) {
+		return Category.builder()
+					   .member(member)
+					   .name(name)
+					   .build();
+	}
+
 	@Builder
-	public Category(Member member, String name) {
+	private Category(Member member, String name) {
 		this.member = member;
 		this.name = name;
 	}

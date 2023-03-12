@@ -28,8 +28,6 @@ public class Member {
 	@Column(name = "member_id")
 	private UUID id;
 
-	private String phoneNumber;
-
 	private String name;
 
 	private String email;
@@ -38,15 +36,27 @@ public class Member {
 
 	private int money;
 
+	private String phoneNumber;
+
 	@CreatedDate
 	private Timestamp createdAt;
 
+	public static Member createMember(String name, String email, String password, int money, String phoneNumber) {
+		return Member.builder()
+					 .name(name)
+					 .email(email)
+					 .password(password)
+					 .money(money)
+					 .phoneNumber(phoneNumber)
+					 .build();
+	}
+
 	@Builder
-	public Member(String phoneNumber, String name, String email, String password, int money) {
-		this.phoneNumber = phoneNumber;
+	private Member(String name, String email, String password, int money, String phoneNumber) {
 		this.name = name;
 		this.email = email;
 		this.password = password;
 		this.money = money;
+		this.phoneNumber = phoneNumber;
 	}
 }
