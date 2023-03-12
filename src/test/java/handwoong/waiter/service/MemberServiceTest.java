@@ -2,6 +2,7 @@ package handwoong.waiter.service;
 
 import static org.assertj.core.api.Assertions.*;
 
+import java.util.List;
 import java.util.UUID;
 
 import org.junit.jupiter.api.DisplayName;
@@ -59,5 +60,31 @@ class MemberServiceTest {
 		assertThat(saveMember.getEmail()).isEqualTo("test@test.com");
 		assertThat(saveMember.getName()).isEqualTo("handwoong");
 		assertThat(saveMember.getPhoneNumber()).isEqualTo("01012345678");
+	}
+
+	@Test
+	@DisplayName("회원목록_조회")
+	public void 회원목록_조회() throws Exception {
+		// given
+		Member member1 = Member.builder()
+							   .email("test@test.com")
+							   .name("handwoong")
+							   .phoneNumber("01012345678")
+							   .build();
+		Member member2 = Member.builder()
+							   .email("test@test.com")
+							   .name("handwoong")
+							   .phoneNumber("01012345678")
+							   .build();
+
+		// when
+		memberService.register(member1);
+		memberService.register(member2);
+		List<Member> members = memberService.findMembers();
+
+		// then
+		assertThat(members.size()).isEqualTo(2);
+		assertThat(members).contains(member1);
+		assertThat(members).contains(member2);
 	}
 }
