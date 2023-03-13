@@ -5,9 +5,7 @@
     <title>웨이팅 관리</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="shortcut icon" th:href="@{/favicon.ico}">
-    <link th:href="@{/css/bootstrap.min.css}"
-          href="../../static/css/bootstrap.min.css"
-          rel="stylesheet">
+    <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
 </head>
 <body>
 <table class="table">
@@ -21,13 +19,14 @@
     </tr>
     </thead>
     <tbody id="target-reload" class="table-group-divider">
-    <tr th:each="customer : ${customers}">
-        <th scope="row" th:text="${customer.waitingNumber}">대기번호</th>
-        <td th:text="${customer.adult}">어른</td>
-        <td th:text="${customer.children}">아이</td>
+    <tr th:each="waiting : ${waitingList}">
+        <th scope="row" th:text="${waiting.waitingNumber}">대기번호</th>
+        <td th:text="${waiting.adult}">어른</td>
+        <td th:text="${waiting.children}">아이</td>
         <td>
-            <button class="btn btn-primary btn-sm" type="button" th:data-customerId="${customer.id}"
-                    th:onclick="sendAlimTalk(this.getAttribute('data-customerId'))">
+            <button class="btn btn-primary btn-sm" type="button"
+                    th:id="${waiting.id}"
+                    th:onclick="sendAlimTalk([[${memberId}]], this.id)">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-send"
                      viewBox="0 0 16 16">
                     <path d="M15.854.146a.5.5 0 0 1 .11.54l-5.819 14.547a.75.75 0 0 1-1.329.124l-3.178-4.995L.643 7.184a.75.75 0 0 1 .124-1.33L15.314.037a.5.5 0 0 1 .54.11ZM6.636 10.07l2.761 4.338L14.13 2.576 6.636 10.07Zm6.787-8.201L1.591 6.602l4.339 2.76 7.494-7.493Z"/>
@@ -36,8 +35,9 @@
             </button>
         </td>
         <td>
-            <button class="btn btn-danger btn-sm" type="button" th:data-customerId="${customer.id}"
-                    th:onclick="deleteWaiting(this.getAttribute('data-customerId'))">
+            <button class="btn btn-danger btn-sm" type="button"
+                    th:id="${waiting.id}"
+                    th:onclick="deleteWaiting([[${memberId}]], this.id)">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash"
                      viewBox="0 0 16 16">
                     <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
@@ -50,82 +50,11 @@
     </tr>
     </tbody>
 </table>
+<script th:src="@{/js/jquery.min.js}"></script>
+<script th:src="@{/js/dataFetch.js}"></script>
 <script th:inline="javascript">
     const webSocket = new WebSocket("ws://localhost:8080/ws/customers/waiting");
     webSocket.onmessage = onMessage;
-
-    const tbody = document.querySelector(".table-group-divider");
-
-    function onMessage(msg) {
-        if (msg.data === 'refresh') {
-            fetch("/customers/waiting/admin/reload", {method: "GET"})
-                .then(res => res.json())
-                .then(customers => {
-                    tbody.replaceChildren();
-                    tbody.innerHTML = createTable(customers);
-                })
-        }
-    }
-
-    const createTable = (customers) => {
-        let result = "";
-        customers.forEach(customer => {
-            result += `<tr>
-        <th scope="row">${customer.waitingNumber}</th>
-        <td>${customer.adult}</td>
-        <td>${customer.children}</td>
-        <td>
-            <button class="btn btn-primary btn-sm" type="button" data-customerId="${customer.id}"
-                    onclick="sendAlimTalk(this.getAttribute('data-customerId'))">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-send"
-                     viewBox="0 0 16 16">
-                    <path d="M15.854.146a.5.5 0 0 1 .11.54l-5.819 14.547a.75.75 0 0 1-1.329.124l-3.178-4.995L.643 7.184a.75.75 0 0 1 .124-1.33L15.314.037a.5.5 0 0 1 .54.11ZM6.636 10.07l2.761 4.338L14.13 2.576 6.636 10.07Zm6.787-8.201L1.591 6.602l4.339 2.76 7.494-7.493Z"/>
-                </svg>
-                전송
-            </button>
-        </td>
-        <td>
-            <button class="btn btn-danger btn-sm" type="button" data-customerId="${customer.id}"
-                    onclick="deleteWaiting(this.getAttribute('data-customerId'))">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash"
-                     viewBox="0 0 16 16">
-                    <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
-                    <path fill-rule="evenodd"
-                          d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/>
-                </svg>
-                삭제
-            </button>
-        </td>
-    </tr>`
-        })
-        return result;
-    }
-
-    const sendAlimTalk = (customerId) => {
-        if (window.confirm("입장 메시지를 보낼까요?")) {
-            fetch(`/customers/waiting/notice/${customerId}`, {method: 'POST'})
-                .then(res => res.text())
-                .then(res => {
-                    if (res === 'ok') {
-                        alert("전송 완료")
-                    } else {
-                        alert("전송 실패!!")
-                    }
-                })
-        }
-    }
-
-    const deleteWaiting = (customerId) => {
-        if (window.confirm("입장이 완료되었나요?")) {
-            fetch(`/customers/waiting/delete/${customerId}`, {method: 'DELETE'})
-                .then(res => res.json())
-                .then(res => {
-                    if (!!res.id) {
-                        webSocket.send("refresh");
-                    }
-                })
-        }
-    }
 </script>
 <script th:src="@{/js/bootstrap.min.js}"></script>
 </body>

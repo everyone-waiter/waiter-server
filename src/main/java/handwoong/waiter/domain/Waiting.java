@@ -12,6 +12,8 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
@@ -26,6 +28,7 @@ import lombok.NoArgsConstructor;
 @EntityListeners(AuditingEntityListener.class)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Waiting {
+
 	@Id
 	@GeneratedValue(generator = "uuid2")
 	@GenericGenerator(name = "uuid2", strategy = "uuid2")
@@ -48,17 +51,23 @@ public class Waiting {
 
 	private boolean isSendMessage = false;
 
+	@Enumerated(EnumType.STRING)
+	private WaitingStatus status;
+
 	@CreatedDate
 	private Timestamp createdAt;
 
 	@Builder
-	private Waiting(Member member, int waitingNumber, int waitingTurn, int adult, int children, String phoneNumber) {
+	private Waiting(
+		Member member, int waitingNumber, int waitingTurn, int adult, int children, String phoneNumber, WaitingStatus status
+	) {
 		this.member = member;
 		this.waitingNumber = waitingNumber;
 		this.waitingTurn = waitingTurn;
 		this.adult = adult;
 		this.children = children;
 		this.phoneNumber = phoneNumber;
+		this.status = status;
 	}
 
 	public static Waiting createWaiting(Member member, int waitingNumber, int waitingTurn, int adult, int children, String phoneNumber) {
@@ -69,20 +78,26 @@ public class Waiting {
 								 .adult(adult)
 								 .children(children)
 								 .phoneNumber(phoneNumber)
+								 .status(WaitingStatus.DEFAULT)
 								 .build();
 		member.addWaiting(waiting);
 		return waiting;
 	}
 
-	public void cancel() {
+	public void cancel(WaitingStatus status) {
 		member.removeWaiting(this);
+		changeStatus(status);
 	}
 
 	public void decreaseTurn() {
 		waitingTurn--;
 	}
 
-	public void changeStatus() {
+	public void changeSendStatus() {
 		isSendMessage = true;
+	}
+
+	public void changeStatus(WaitingStatus status) {
+		this.status = status;
 	}
 }

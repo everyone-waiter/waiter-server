@@ -25,6 +25,7 @@ import lombok.NoArgsConstructor;
 @EntityListeners(AuditingEntityListener.class)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Member {
+
 	@Id
 	@GeneratedValue(generator = "uuid2")
 	@GenericGenerator(name = "uuid2", strategy = "uuid2")
@@ -76,6 +77,6 @@ public class Member {
 			throw new IllegalStateException("존재하지 않는 웨이팅입니다.");
 		}
 
-		waitingList.forEach(Waiting::decreaseTurn);
+		waitingList.stream().filter(w -> w.getWaitingNumber() > waiting.getWaitingNumber()).forEach(Waiting::decreaseTurn);
 	}
 }

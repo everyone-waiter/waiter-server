@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import handwoong.waiter.domain.Member;
 import handwoong.waiter.domain.Waiting;
+import handwoong.waiter.domain.WaitingStatus;
 import handwoong.waiter.form.WaitingForm;
 import handwoong.waiter.repository.MemberRepository;
 import handwoong.waiter.repository.WaitingRepository;
@@ -35,9 +36,17 @@ public class WaitingService {
 
 	@Transactional
 	public Waiting register(UUID memberId, WaitingForm waitingForm) {
+		int waitingNumber = 1;
+		int waitingTurn = 0;
+
 		Member member = memberRepository.findOne(memberId);
-		int waitingTurn = member.getWaitingList().size();
-		int waitingNumber = waitingTurn + 1;
+		List<Waiting> waitingList = member.getWaitingList();
+
+		if (!waitingList.isEmpty()) {
+			Waiting latestWaiting = waitingList.get(waitingList.size() - 1);
+			waitingNumber = latestWaiting.getWaitingNumber() + 1;
+			waitingTurn = latestWaiting.getWaitingTurn() + 1;
+		}
 
 		Waiting waiting = Waiting.createWaiting(
 			member, waitingNumber, waitingTurn,
@@ -52,12 +61,13 @@ public class WaitingService {
 	@Transactional
 	public void deleteWaiting(UUID waitingId) {
 		Waiting waiting = waitingRepository.findOne(waitingId);
-		waiting.cancel();
+		waiting.cancel(WaitingStatus.ENTER);
 	}
 
 	@Transactional
 	public void cancelWaiting(UUID waitingId) {
-		deleteWaiting(waitingId);
+		Waiting waiting = waitingRepository.findOne(waitingId);
+		waiting.cancel(WaitingStatus.CANCEL);
 		// TODO 알림톡
 	}
 
@@ -81,6 +91,6 @@ public class WaitingService {
 			return;
 
 		// TODO 알림톡
-		thirdWaiting.changeStatus();
+		thirdWaiting.changeSendStatus();
 	}
 }

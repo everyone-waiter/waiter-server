@@ -17,6 +17,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import handwoong.waiter.domain.Waiting;
 import handwoong.waiter.form.WaitingForm;
+import handwoong.waiter.repository.WaitingRepository;
 import handwoong.waiter.service.WaitingService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -27,13 +28,14 @@ import lombok.extern.slf4j.Slf4j;
 public class WaitingController {
 
 	private final WaitingService waitingService;
+	private final WaitingRepository waitingRepository;
 
 	// ================ VIEW ================
 
 	@GetMapping("/waiting/{memberId}")
 	public String waitingForm(@PathVariable String memberId, Model model) {
-		List<Waiting> waitingList = waitingService.findWaitingList(UUID.fromString(memberId));
-		model.addAttribute("count", waitingList.size());
+		Long count = waitingRepository.count(UUID.fromString(memberId));
+		model.addAttribute("count", count);
 		model.addAttribute("waitingForm", new WaitingForm());
 		return "waiting/addForm";
 	}
@@ -61,6 +63,7 @@ public class WaitingController {
 	public String adminForm(@PathVariable String memberId, Model model) {
 		List<Waiting> waitingList = waitingService.findWaitingList(UUID.fromString(memberId));
 		model.addAttribute("waitingList", waitingList);
+		model.addAttribute("memberId", memberId);
 		return "waiting/admin";
 	}
 
@@ -68,14 +71,15 @@ public class WaitingController {
 
 	@GetMapping("/waiting/{memberId}/reload")
 	public String replaceWaitingForm(@PathVariable String memberId, Model model) {
-		List<Waiting> waitingList = waitingService.findWaitingList(UUID.fromString(memberId));
-		model.addAttribute("count", waitingList.size());
+		Long count = waitingRepository.count(UUID.fromString(memberId));
+		model.addAttribute("count", count);
 		return "waiting/addForm :: #target-reload";
 	}
 
 	@GetMapping("/waiting/admin/{memberId}/reload")
 	public String replaceAdminForm(@PathVariable String memberId, Model model) {
 		List<Waiting> waitingList = waitingService.findWaitingList(UUID.fromString(memberId));
+		model.addAttribute("memberId", memberId);
 		model.addAttribute("waitingList", waitingList);
 		return "waiting/admin :: #target-reload";
 	}
@@ -87,8 +91,8 @@ public class WaitingController {
 		UUID memberUUID = UUID.fromString(memberId);
 
 		if (errors.hasErrors()) {
-			List<Waiting> waitingList = waitingService.findWaitingList(memberUUID);
-			model.addAttribute("count", waitingList.size());
+			Long count = waitingRepository.count(UUID.fromString(memberId));
+			model.addAttribute("count", count);
 			return "waiting/addForm";
 		}
 
@@ -120,8 +124,9 @@ public class WaitingController {
 	}
 
 	@DeleteMapping("/waiting/cancel/{waitingId}")
+	@ResponseBody
 	public String userCancelWaiting(@PathVariable String waitingId) {
 		waitingService.cancelWaiting(UUID.fromString(waitingId));
-		return "waiting/cancelResult";
+		return "ok";
 	}
 }
