@@ -1,6 +1,7 @@
 package handwoong.waiter.repository;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.stereotype.Repository;
@@ -12,14 +13,15 @@ import lombok.RequiredArgsConstructor;
 @Repository
 @RequiredArgsConstructor
 public class MemberRepository {
+
 	private final EntityManager em;
 
 	public void save(Member member) {
 		em.persist(member);
 	}
 
-	public Member findOne(UUID memberId) {
-		return em.find(Member.class, memberId);
+	public Optional<Member> findOne(UUID memberId) {
+		return Optional.ofNullable(em.find(Member.class, memberId));
 	}
 
 	public List<Member> findAll() {

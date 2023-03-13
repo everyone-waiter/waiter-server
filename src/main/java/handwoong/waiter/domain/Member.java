@@ -9,6 +9,7 @@ import org.hibernate.annotations.GenericGenerator;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import handwoong.waiter.exception.NotFoundWaitingException;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
@@ -74,7 +75,7 @@ public class Member {
 	public void removeWaiting(Waiting waiting) {
 		boolean isRemoveWaiting = waitingList.remove(waiting);
 		if (!isRemoveWaiting) {
-			throw new IllegalStateException("존재하지 않는 웨이팅입니다.");
+			throw new NotFoundWaitingException();
 		}
 
 		waitingList.stream().filter(w -> w.getWaitingNumber() > waiting.getWaitingNumber()).forEach(Waiting::decreaseTurn);

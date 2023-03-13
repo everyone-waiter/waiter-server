@@ -93,20 +93,19 @@ public class Waiting {
 								 .status(WaitingStatus.DEFAULT)
 								 .build();
 		member.addWaiting(waiting);
-		List<Waiting> waitingList1 = member.getWaitingList();
-		for (Waiting w : waitingList1) {
-			System.out.println("w.getWaitingTurn() = " + w.getWaitingTurn());
-			System.out.println("w.getWaitingNumber() = " + w.getWaitingNumber());
-		}
 		return waiting;
 	}
 
 	public void decreaseTurn() {
+		if (getWaitingTurn() <= 0) {
+			throw new IllegalStateException("대기 순서는 0보다 작아 질 수 없습니다.");
+		}
+
 		waitingTurn--;
 	}
 
 	public void cancel(WaitingStatus status) {
-		member.removeWaiting(this);
+		getMember().removeWaiting(this);
 		changeStatus(status);
 	}
 

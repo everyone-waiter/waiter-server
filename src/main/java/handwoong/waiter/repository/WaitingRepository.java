@@ -1,6 +1,7 @@
 package handwoong.waiter.repository;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.stereotype.Repository;
@@ -20,8 +21,8 @@ public class WaitingRepository {
 		em.persist(waiting);
 	}
 
-	public Waiting findOne(UUID waitingId) {
-		return em.find(Waiting.class, waitingId);
+	public Optional<Waiting> findOne(UUID waitingId) {
+		return Optional.ofNullable(em.find(Waiting.class, waitingId));
 	}
 
 	public List<Waiting> findAll(UUID memberId) {

@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import handwoong.waiter.domain.Member;
+import handwoong.waiter.exception.NotFoundMemberException;
 import handwoong.waiter.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 
@@ -14,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class MemberService {
+
 	private final MemberRepository memberRepository;
 
 	@Transactional
@@ -28,6 +30,6 @@ public class MemberService {
 	}
 
 	public Member findOne(UUID memberId) {
-		return memberRepository.findOne(memberId);
+		return memberRepository.findOne(memberId).orElseThrow(NotFoundMemberException::new);
 	}
 }

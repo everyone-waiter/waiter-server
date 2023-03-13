@@ -3,7 +3,7 @@ package handwoong.waiter.exception;
 public class NotFoundWaitingException extends RuntimeException {
 
 	public NotFoundWaitingException() {
-		super();
+		super("웨이팅을 찾을 수 없습니다.");
 	}
 
 	public NotFoundWaitingException(String message) {
