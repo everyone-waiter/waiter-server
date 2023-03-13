@@ -3,6 +3,8 @@ package handwoong.waiter.domain;
 import static jakarta.persistence.FetchType.*;
 
 import java.sql.Timestamp;
+import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import org.hibernate.annotations.GenericGenerator;
@@ -70,7 +72,17 @@ public class Waiting {
 		this.status = status;
 	}
 
-	public static Waiting createWaiting(Member member, int waitingNumber, int waitingTurn, int adult, int children, String phoneNumber) {
+	public static Waiting createWaiting(Member member, int adult, int children, String phoneNumber) {
+		int waitingNumber = 1;
+		int waitingTurn = 0;
+		List<Waiting> waitingList = member.getWaitingList();
+
+		if (!waitingList.isEmpty()) {
+			Waiting latestWaiting = waitingList.get(waitingList.size() - 1);
+			waitingNumber = latestWaiting.getWaitingNumber() + 1;
+			waitingTurn = latestWaiting.getWaitingTurn() + 1;
+		}
+
 		Waiting waiting = Waiting.builder()
 								 .member(member)
 								 .waitingNumber(waitingNumber)
@@ -81,7 +93,16 @@ public class Waiting {
 								 .status(WaitingStatus.DEFAULT)
 								 .build();
 		member.addWaiting(waiting);
+		List<Waiting> waitingList1 = member.getWaitingList();
+		for (Waiting w : waitingList1) {
+			System.out.println("w.getWaitingTurn() = " + w.getWaitingTurn());
+			System.out.println("w.getWaitingNumber() = " + w.getWaitingNumber());
+		}
 		return waiting;
+	}
+
+	public void decreaseTurn() {
+		waitingTurn--;
 	}
 
 	public void cancel(WaitingStatus status) {
@@ -89,15 +110,27 @@ public class Waiting {
 		changeStatus(status);
 	}
 
-	public void decreaseTurn() {
-		waitingTurn--;
+	private void changeStatus(WaitingStatus status) {
+		this.status = status;
+	}
+
+	public Optional<Waiting> readyNotice() {
+		List<Waiting> waitingList = getMember().getWaitingList();
+		if (waitingList.size() < 3)
+			return Optional.empty();
+
+		boolean isFirstWaiting = waitingList.get(0).getId().equals(getId());
+		if (!isFirstWaiting)
+			return Optional.empty();
+
+		Waiting thirdWaiting = waitingList.get(2);
+		if (thirdWaiting.isSendMessage())
+			return Optional.empty();
+
+		return Optional.of(thirdWaiting);
 	}
 
 	public void changeSendStatus() {
 		isSendMessage = true;
-	}
-
-	public void changeStatus(WaitingStatus status) {
-		this.status = status;
 	}
 }

@@ -63,7 +63,6 @@ public class WaitingController {
 	public String adminForm(@PathVariable String memberId, Model model) {
 		List<Waiting> waitingList = waitingService.findWaitingList(UUID.fromString(memberId));
 		model.addAttribute("waitingList", waitingList);
-		model.addAttribute("memberId", memberId);
 		return "waiting/admin";
 	}
 
@@ -79,7 +78,6 @@ public class WaitingController {
 	@GetMapping("/waiting/admin/{memberId}/reload")
 	public String replaceAdminForm(@PathVariable String memberId, Model model) {
 		List<Waiting> waitingList = waitingService.findWaitingList(UUID.fromString(memberId));
-		model.addAttribute("memberId", memberId);
 		model.addAttribute("waitingList", waitingList);
 		return "waiting/admin :: #target-reload";
 	}
@@ -102,17 +100,14 @@ public class WaitingController {
 		return "redirect:/waiting/result";
 	}
 
-	@PostMapping("/waiting/notice/{memberId}/{waitingId}")
+	@PostMapping("/waiting/admin/notice/{waitingId}")
 	@ResponseBody
-	public String waitingNotice(@PathVariable String memberId, @PathVariable String waitingId) {
-		UUID memberUUID = UUID.fromString(memberId);
-		UUID waitingUUID = UUID.fromString(waitingId);
-
-		waitingService.notice(memberUUID, waitingUUID);
+	public String waitingNotice(@PathVariable String waitingId) {
+		waitingService.notice(UUID.fromString(waitingId));
 		return "ok";
 	}
 
-	@DeleteMapping("/waiting/{memberId}/delete/{waitingId}")
+	@DeleteMapping("/waiting/admin/{memberId}/delete/{waitingId}")
 	public String adminDeleteWaiting(@PathVariable String memberId, @PathVariable String waitingId, Model model) {
 		UUID memberUUID = UUID.fromString(memberId);
 		UUID waitingUUID = UUID.fromString(waitingId);

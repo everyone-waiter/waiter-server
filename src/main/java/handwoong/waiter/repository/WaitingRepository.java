@@ -1,7 +1,6 @@
 package handwoong.waiter.repository;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.stereotype.Repository;
@@ -32,18 +31,10 @@ public class WaitingRepository {
 				 .getResultList();
 	}
 
-	public Optional<Waiting> findOneDesc(UUID memberId) {
-		return em.createQuery("select w from Waiting w where w.member.id = :memberId and w.status = :status order by w.waitingNumber desc",
-					 Waiting.class)
+	public Long count(UUID memberId) {
+		return em.createQuery("select count(w) from Waiting w where w.member.id = :memberId and w.status = :status", Long.class)
 				 .setParameter("memberId", memberId)
 				 .setParameter("status", WaitingStatus.DEFAULT)
-				 .getResultStream()
-				 .findAny();
-	}
-
-	public Long count(UUID memberId) {
-		return em.createQuery("select count(w) from Waiting w where w.member.id = :memberId", Long.class)
-				 .setParameter("memberId", memberId)
 				 .getSingleResult();
 	}
 }

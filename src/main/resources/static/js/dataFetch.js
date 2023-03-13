@@ -7,26 +7,26 @@ function onMessage(socketMessage) {
     }).done(fragment => $("#target-reload").replaceWith(fragment))
 }
 
-const sendAlimTalk = (memberId, waitingId) => {
+const sendAlimTalk = (waitingId) => {
     if (!window.confirm("입장 메시지를 보낼까요?")) return;
 
     $.ajax({
-        url: `/waiting/notice/${memberId}/${waitingId}`,
+        url: `/waiting/admin/notice/${waitingId}`,
         method: "POST"
     }).done(res => alert("전송 완료"))
         .fail(data => alert("전송 실패"))
 }
 
-const deleteWaiting = (memberId, waitingId) => {
+const deleteWaiting = (waitingId) => {
     if (!window.confirm("입장이 완료되었나요?")) return
 
     $.ajax({
-        url: `/waiting/${memberId}/delete/${waitingId}`,
+        url: `${location.pathname}/delete/${waitingId}`,
         method: "DELETE",
         cache: false
     }).done(fragment => {
-        $("#target-reload").replaceWith(fragment)
         webSocket.send("refresh");
+        $("#target-reload").replaceWith(fragment)
         alert("삭제 완료")
     }).fail(data => alert("삭제 실패"))
 }
