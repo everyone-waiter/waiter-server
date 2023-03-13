@@ -34,19 +34,22 @@ public class WaitingController {
 
 	@GetMapping("/waiting/{memberId}")
 	public String waitingForm(@PathVariable String memberId, Model model) {
+		log.info("[GET] /waiting/{memberId} waitingForm parameter = {}", memberId);
 		Long count = waitingRepository.count(UUID.fromString(memberId));
 		model.addAttribute("count", count);
-		model.addAttribute("waitingForm", new WaitingRequestDto());
+		model.addAttribute("waitingRequestDto", new WaitingRequestDto());
 		return "waiting/addForm";
 	}
 
 	@GetMapping("/waiting/result")
 	public String resultForm(@ModelAttribute Waiting waiting) {
+		log.info("[GET] /waiting/result resultForm");
 		return "waiting/result";
 	}
 
 	@GetMapping("/waiting/turn/{waitingId}")
 	public String turnForm(@PathVariable String waitingId, Model model) {
+		log.info("[GET] /waiting/turn/{waitingId} turnForm parameter = {}", waitingId);
 		Waiting waiting = waitingService.findOne(UUID.fromString(waitingId));
 		model.addAttribute("waiting", waiting);
 		return "waiting/turn";
@@ -54,6 +57,7 @@ public class WaitingController {
 
 	@GetMapping("/waiting/cancel/{waitingId}")
 	public String cancelForm(@PathVariable String waitingId, Model model) {
+		log.info("[GET] /waiting/cancel/{waitingId} cancelForm parameter = {}", waitingId);
 		Waiting waiting = waitingService.findOne(UUID.fromString(waitingId));
 		model.addAttribute("waiting", waiting);
 		return "waiting/cancel";
@@ -61,6 +65,7 @@ public class WaitingController {
 
 	@GetMapping("/waiting/admin/{memberId}")
 	public String adminForm(@PathVariable String memberId, Model model) {
+		log.info("[GET] /waiting/admin/{memberId} adminForm parameter = {}", memberId);
 		List<Waiting> waitingList = waitingService.findWaitingList(UUID.fromString(memberId));
 		model.addAttribute("waitingList", waitingList);
 		return "waiting/admin";
@@ -86,6 +91,7 @@ public class WaitingController {
 	public String waitingRegister(
 		@PathVariable String memberId, @Validated WaitingRequestDto waitingRequestDto,
 		Errors errors, Model model, RedirectAttributes redirectAttributes) {
+		log.info("[POST] /waiting/{memberId} waitingRegister parameter = {}", memberId);
 		UUID memberUUID = UUID.fromString(memberId);
 
 		if (errors.hasErrors()) {
@@ -103,12 +109,14 @@ public class WaitingController {
 	@PostMapping("/waiting/admin/notice/{waitingId}")
 	@ResponseBody
 	public String waitingNotice(@PathVariable String waitingId) {
+		log.info("[POST] /waiting/admin/notice/{waitingId} waitingNotice parameter = {}", waitingId);
 		waitingService.notice(UUID.fromString(waitingId));
 		return "ok";
 	}
 
 	@DeleteMapping("/waiting/admin/{memberId}/delete/{waitingId}")
 	public String adminDeleteWaiting(@PathVariable String memberId, @PathVariable String waitingId, Model model) {
+		log.info("[DELETE] /waiting/admin/{memberId}/delete/{waitingId} adminDeleteWaiting parameter = {}, {}", memberId, waitingId);
 		UUID memberUUID = UUID.fromString(memberId);
 		UUID waitingUUID = UUID.fromString(waitingId);
 
@@ -121,6 +129,7 @@ public class WaitingController {
 	@DeleteMapping("/waiting/cancel/{waitingId}")
 	@ResponseBody
 	public String userCancelWaiting(@PathVariable String waitingId) {
+		log.info("[DELETE] /waiting/cancel/{waitingId} userCancelWaiting parameter = {}", waitingId);
 		waitingService.cancelWaiting(UUID.fromString(waitingId));
 		return "ok";
 	}

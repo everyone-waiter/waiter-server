@@ -18,7 +18,7 @@
                 입장 대기 등록을 해 주세요.</p>
         </div>
         <div class="col-md-10 mx-auto col-lg-5">
-            <form class="p-4 p-md-5 border rounded-3 bg-light" th:action th:object="${waitingForm}" method="post">
+            <form class="p-4 p-md-5 border rounded-3 bg-light" th:action th:object="${waitingRequestDto}" method="post">
                 <p class="col-lg-10 fs-4">인원 수와 휴대폰 번호를 입력 해 주세요.</p>
                 <div class="form-floating mb-3">
                     <input type="number" class="form-control" placeholder="0"
