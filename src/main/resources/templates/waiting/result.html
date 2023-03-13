@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>웨이팅 결과</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="shortcut icon" th:href="@{/favicon.ico}">
+    <link th:href="@{/css/bootstrap.min.css}"
+          href="../../static/css/bootstrap.min.css"
+          rel="stylesheet">
+</head>
+<body>
+<div class="px-4 pt-5 my-5 text-center border-bottom">
+    <h1 class="display-4 fw-bold" th:if="${waiting.id}">대기열 등록 성공</h1>
+    <div class="col-lg-6 mx-auto">
+        <p class="lead mb-4" th:if="${waiting.phoneNumber}">카카오톡으로 알림톡이 전송되었어요.</p>
+        <p class="lead mb-4" th:if="${waiting.waitingNumber}">고객님의 대기 번호는 [[${waiting.waitingNumber}]]번 입니다.</p>
+        <p class="lead mb-4" th:if="${waiting.waitingTurn}">고객님의 대기 순번은 [[${waiting.waitingTurn}]]번 입니다.</p>
+        <p id="timer">5초 뒤 홈 화면으로 돌아갑니다.</p>
+        <div class="d-grid gap-2 d-sm-flex justify-content-sm-center mb-5">
+            <button type="button" class="btn btn-primary btn-lg px-4 me-sm-3"
+                    th:onclick="|location.href='@{/waiting/{memberId}(memberId=${memberId})}'|">홈으로
+                돌아가기
+            </button>
+        </div>
+    </div>
+</div>
+<script th:inline="javascript">
+    const timerDom = document.querySelector("#timer");
+    const webSocket = new WebSocket("ws://localhost:8080/ws/customers/waiting");
+    webSocket.onopen = () => {
+        webSocket.send("refresh");
+    }
+
+    let time = 5;
+    setInterval(() => {
+        if (time === 0) location.replace("/waiting/" + [[${memberId}]]);
+        time--;
+        timerDom.textContent = `${time}초 뒤 홈 화면으로 돌아갑니다.`;
+    }, 1000);
+</script>
+<script th:src="@{/js/bootstrap.min.js}"></script>
+</body>
+</html>

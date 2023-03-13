@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>웨이팅 안내</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="shortcut icon" th:href="@{/favicon.ico}">
+    <link th:href="@{/css/bootstrap.min.css}"
+          href="../../static/css/bootstrap.min.css"
+          rel="stylesheet">
+    <style>
+        .field-error {
+            border-color: red;
+            color: red;
+        }
+    </style>
+</head>
+<body>
+<div class="container col-xl-10 col-xxl-8 px-4 py-5">
+    <div class="row align-items-center g-lg-5 py-5">
+        <div id="target-reload" class="col-lg-7 text-center text-lg-start">
+            <h1 id="waitingCount" class="display-4 fw-bold lh-1 mb-3" th:text="|현재 ${count}팀이 대기 중|">현재 웨이팅 중인 팀 수</h1>
+            <p id="waitingMessage" class="col-lg-10 fs-4"
+               th:text="${count} ? _ : |현재 대기중인 팀이 없습니다. 직원이 안내를 도와드릴거에요.|">잔여 좌석이 없습니다.
+                입장 대기 등록을 해 주세요.</p>
+        </div>
+        <div class="col-md-10 mx-auto col-lg-5">
+            <form class="p-4 p-md-5 border rounded-3 bg-light" th:action th:object="${waitingForm}" method="post">
+                <p class="col-lg-10 fs-4">인원 수와 휴대폰 번호를 입력 해 주세요.</p>
+                <div class="form-floating mb-3">
+                    <input type="number" class="form-control" placeholder="0"
+                           th:field="*{adult}"
+                           th:errorclass="field-error"
+                    >
+                    <label for="adult">성인</label>
+                    <p class="field-error" th:errors="*{adult}">성인 인원 오류</p>
+                </div>
+                <div class="form-floating mb-3">
+                    <input type="number" class="form-control" placeholder="0"
+                           th:field="*{children}"
+                           th:errorclass="field-error"
+                    >
+                    <label for="children">아동</label>
+                    <p class="field-error" th:errors="*{children}">아동 인원 오류</p>
+                </div>
+                <div class="form-floating mb-3">
+                    <input type="number" class="form-control" placeholder="01012345678"
+                           th:field="*{phoneNumber}"
+                           th:errorclass="field-error"
+                    >
+                    <label for="phoneNumber">휴대폰 번호</label>
+                    <p class="field-error" th:errors="*{phoneNumber}">휴대폰 번호 오류</p>
+                </div>
+                <button class="w-100 btn btn-lg btn-primary" type="submit">등록하기</button>
+                <small class="text-muted">카카오 알림톡으로 안내 해 드리고 있어요.</small>
+                <hr class="my-4">
+                <small class="text-muted">좌석 현황 및 인원에 따라 입장 순서에 변동이 생길 수 있어요.</small>
+            </form>
+        </div>
+    </div>
+</div>
+<script th:inline="javascript">
+    const webSocket = new WebSocket("ws://localhost:8080/ws/customers/waiting")
+    const waitingCountDom = document.getElementById("waitingCount");
+    const waitingMessageDom = document.getElementById("waitingMessage")
+    webSocket.onmessage = onMessage;
+
+    function onMessage(msg) {
+        if (msg.data === 'refresh') {
+            fetch("/customers/waiting/reload", {method: "GET"})
+                .then(res => res.json())
+                .then(res => {
+                    waitingCountDom.textContent = `현재 ${res}팀이 대기 중`;
+                    if (!!res) {
+                        waitingMessageDom.textContent = '잔여 좌석이 없습니다. 입장 대기 등록을 해 주세요.';
+                    } else {
+                        waitingMessageDom.textContent = '현재 대기중인 팀이 없습니다. 직원이 안내를 도와드릴거에요.';
+                    }
+                })
+        }
+    }
+</script>
+<script th:src="@{/js/bootstrap.min.js}"></script>
+</body>
+</html>

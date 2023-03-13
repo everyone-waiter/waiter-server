@@ -55,6 +55,7 @@ public class WaitingService {
 		waiting.cancel();
 	}
 
+	@Transactional
 	public void cancelWaiting(UUID waitingId) {
 		deleteWaiting(waitingId);
 		// TODO 알림톡
@@ -68,16 +69,18 @@ public class WaitingService {
 
 	private void readyNotice(UUID memberId, UUID waitingId) {
 		List<Waiting> waitingList = waitingRepository.findAll(memberId);
-		boolean isFirstWaiting = waitingList.get(0).getId().equals(waitingId);
-
-		if (!isFirstWaiting || waitingList.size() < 3) {
+		if (waitingList.size() < 3)
 			return;
-		}
+
+		boolean isFirstWaiting = waitingList.get(0).getId().equals(waitingId);
+		if (!isFirstWaiting)
+			return;
 
 		Waiting thirdWaiting = waitingList.get(2);
-		if (!thirdWaiting.isSendMessage()) {
-			// TODO 알림톡
-			thirdWaiting.changeStatus();
-		}
+		if (thirdWaiting.isSendMessage())
+			return;
+
+		// TODO 알림톡
+		thirdWaiting.changeStatus();
 	}
 }

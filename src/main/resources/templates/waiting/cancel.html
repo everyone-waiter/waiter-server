@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>웨이팅 취소</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="shortcut icon" th:href="@{/favicon.ico}">
+    <link th:href="@{/css/bootstrap.min.css}"
+          href="../../static/css/bootstrap.min.css"
+          rel="stylesheet">
+</head>
+<body>
+<div class="px-4 pt-5 my-5 text-center border-bottom">
+    <h1 class="display-4 fw-bold">대기를 취소하시려구요?</h1>
+    <div class="col-lg-6 mx-auto">
+        <p class="lead mb-4">대기를 취소하시면 다시 대기 등록을 하셔야 합니다.</p>
+        <p class="lead mb-4">대기를 취소하시려면 [[${customer.waitingNumber}]]를 입력해주세요.</p>
+        <div class="form-floating mb-3">
+            <input type="number" name="waitingNumber" class="form-control" id="cancelWaitingNumber"
+                   placeholder="0">
+            <label for="cancelWaitingNumber">대기 번호</label>
+        </div>
+        <div class="d-grid gap-2 d-sm-flex justify-content-sm-center mb-5">
+            <button type="button" class="btn btn-primary btn-lg px-4 me-sm-3" th:data-customerId="${customer.id}"
+                    th:onclick="cancelWaiting(this.getAttribute('data-customerId'))">
+                취소하기
+            </button>
+        </div>
+    </div>
+</div>
+<script th:inline="javascript">
+    const webSocket = new WebSocket("ws://localhost:8080/ws/customers/waiting")
+
+    const cancelWaiting = (customerId) => {
+        const cancelWaitingNumberInput = document.getElementById("cancelWaitingNumber").value;
+        if (parseInt(cancelWaitingNumberInput) === [[${customer.waitingNumber}]]) {
+            fetch(`/customers/waiting/cancel/${customerId}`, {method: 'DELETE'})
+                .then(res => res.json())
+                .then(res => {
+                    if (!!res.id) {
+                        webSocket.send("refresh");
+                        alert("취소가 완료되었습니다.")
+                        location.href = `kakaotalk://inappbrowser/close`
+                    }
+                })
+        } else {
+            alert("잘못 입력하셨습니다.")
+        }
+    }
+</script>
+<script th:src="@{/js/bootstrap.min.js}"></script>
+</body>
+</html>

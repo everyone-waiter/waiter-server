@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>웨이팅 순서 확인</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="shortcut icon" th:href="@{/favicon.ico}">
+    <link th:href="@{/css/bootstrap.min.css}"
+          href="../../static/css/bootstrap.min.css"
+          rel="stylesheet">
+</head>
+<body>
+<div class="px-4 pt-5 my-5 text-center border-bottom" th:if="${waiting.id}">
+    <h1 class="display-4 fw-bold" th:text="|대기번호 : ${waiting.waitingNumber}|">고객님의 대기 번호</h1>
+    <div class="col-lg-6 mx-auto">
+        <h2 class="lead mb-4" th:text="|내 앞 대기팀 : ${waiting.waitingTurn}|">고객님의 대기 순번</h2>
+    </div>
+</div>
+<script>
+    if (![[${waiting}]]) {
+        alert("존재하지 않는 대기번호 입니다.")
+    }
+</script>
+<script th:src="@{/js/bootstrap.min.js}"></script>
+</body>
+</html>

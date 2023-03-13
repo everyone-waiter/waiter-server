@@ -24,7 +24,7 @@ public class WaitingRepository {
 	}
 
 	public List<Waiting> findAll(UUID memberId) {
-		return em.createQuery("select w from Waiting w join w.member m where m.id = :memberId", Waiting.class)
+		return em.createQuery("select w from Waiting w where w.member.id = :memberId", Waiting.class)
 				 .setParameter("memberId", memberId)
 				 .getResultList();
 	}
