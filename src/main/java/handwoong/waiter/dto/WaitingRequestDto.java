@@ -1,4 +1,4 @@
-package handwoong.waiter.form;
+package handwoong.waiter.dto;
 
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.Pattern;
@@ -7,7 +7,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class WaitingForm {
+public class WaitingRequestDto {
 
 	@Min(0)
 	private int adult;

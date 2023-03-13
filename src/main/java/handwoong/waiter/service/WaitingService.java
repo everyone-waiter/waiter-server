@@ -9,7 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import handwoong.waiter.domain.Member;
 import handwoong.waiter.domain.Waiting;
 import handwoong.waiter.domain.WaitingStatus;
-import handwoong.waiter.form.WaitingForm;
+import handwoong.waiter.dto.WaitingRequestDto;
 import handwoong.waiter.repository.MemberRepository;
 import handwoong.waiter.repository.WaitingRepository;
 import lombok.RequiredArgsConstructor;
@@ -35,10 +35,11 @@ public class WaitingService {
 	public List<Waiting> findWaitingList(UUID memberId) {
 		return waitingRepository.findAll(memberId);
 	}
-	
-	public Waiting register(UUID memberId, WaitingForm waitingForm) {
+
+	public Waiting register(UUID memberId, WaitingRequestDto waitingRequestDto) {
 		Member member = memberRepository.findOne(memberId);
-		Waiting waiting = Waiting.createWaiting(member, waitingForm.getAdult(), waitingForm.getChildren(), waitingForm.getPhoneNumber());
+		Waiting waiting = Waiting.createWaiting(
+			member, waitingRequestDto.getAdult(), waitingRequestDto.getChildren(), waitingRequestDto.getPhoneNumber());
 		waitingRepository.save(waiting);
 		// TODO 알림톡
 		return waiting;

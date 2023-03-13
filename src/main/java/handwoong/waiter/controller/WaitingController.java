@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import handwoong.waiter.domain.Waiting;
-import handwoong.waiter.form.WaitingForm;
+import handwoong.waiter.dto.WaitingRequestDto;
 import handwoong.waiter.repository.WaitingRepository;
 import handwoong.waiter.service.WaitingService;
 import lombok.RequiredArgsConstructor;
@@ -36,7 +36,7 @@ public class WaitingController {
 	public String waitingForm(@PathVariable String memberId, Model model) {
 		Long count = waitingRepository.count(UUID.fromString(memberId));
 		model.addAttribute("count", count);
-		model.addAttribute("waitingForm", new WaitingForm());
+		model.addAttribute("waitingForm", new WaitingRequestDto());
 		return "waiting/addForm";
 	}
 
@@ -84,7 +84,7 @@ public class WaitingController {
 
 	@PostMapping("/waiting/{memberId}")
 	public String waitingRegister(
-		@PathVariable String memberId, @Validated WaitingForm waitingForm,
+		@PathVariable String memberId, @Validated WaitingRequestDto waitingRequestDto,
 		Errors errors, Model model, RedirectAttributes redirectAttributes) {
 		UUID memberUUID = UUID.fromString(memberId);
 
@@ -94,7 +94,7 @@ public class WaitingController {
 			return "waiting/addForm";
 		}
 
-		Waiting waiting = waitingService.register(memberUUID, waitingForm);
+		Waiting waiting = waitingService.register(memberUUID, waitingRequestDto);
 		redirectAttributes.addFlashAttribute("waiting", waiting);
 		redirectAttributes.addFlashAttribute("memberId", memberId);
 		return "redirect:/waiting/result";
